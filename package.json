@@ -1,16 +1,10 @@
 {
   "name": "simple-cache",
-  "version": "1.0.0",
   "description": "Simple in-memory cache with additional utilities",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "/dist"
-  ],
+  "version": "1.0.0",
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "prepublish": "npm run build",
     "test": "mocha",
     "coverage": "nyc npm run test"
   },
@@ -40,9 +34,17 @@
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   },
+  "dependencies": {},
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "mocha": {
     "package": "./package.json",
-    "extension": ["ts"],
+    "extension": [
+      "ts"
+    ],
     "spec": [
       "test/**/*.test.ts"
     ],
@@ -74,6 +76,5 @@
     ],
     "report-dir": "./coverage",
     "temp-dir": "./.nyc_output"
-  },
-  "dependencies": {}
+  }
 }
