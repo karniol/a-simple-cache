@@ -29,8 +29,9 @@
     ],
     "esModuleInterop": true,
 
-    /* Source Map Options */
+    /* Miscellaneous */
     "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
   },
   "include": [
     "src/**/*.ts"
