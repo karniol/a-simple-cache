@@ -6,7 +6,8 @@
     "build": "tsc",
     "prepare": "npm run build",
     "test": "mocha",
-    "test:functional": "ts-node test/functional/sleep.ts",
+    "test:functional:sleep": "ts-node test/functional/sleep.ts",
+    "test:functional:memory": "ts-node test/functional/memory.ts",
     "coverage": "nyc npm run test"
   },
   "pre-commit": [
