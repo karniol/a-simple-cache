@@ -5,7 +5,7 @@ const day = 24 * hour;
 const week = 7 * day;
 const month = 30 * day;
 
-export default {
+export const time = {
 	second,
 	minute,
 	hour,

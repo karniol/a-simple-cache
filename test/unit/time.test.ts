@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import time from '../../src/time';
+import { time } from '../../src/time';
 
 describe('time', () => {
     describe('constants', () => {
