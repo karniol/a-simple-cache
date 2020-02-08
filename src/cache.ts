@@ -19,20 +19,24 @@ export interface Entry {
     ttl: number;
 }
 
-function get(key: string): any | null {
+function set(key: string | number, value: any, ttl: number): void {
+    if (ttl <= 0) {
+        throw new RangeError(`\`ttl\` must be a positive number, got ${ttl}`);
+    }
+
+    if (!validateKey(key)) {
+        throw new TypeError('key must be either a string or a number');
+    }
+
+    theCache[key] = { value, cachedAt: new Date(), ttl };
+}
+
+function get(key: string | number): any | null {
     if (theCache.hasOwnProperty(key)) {
         return theCache[key].value;
     }
 
     return null;
-}
-
-function set(key: string, value: any, ttl: number): void {
-    if (ttl <= 0) {
-        throw new RangeError(`SimpleCache: \`ttl\` must be a positive number, got ${ttl}`);
-    }
-
-    theCache[key] = { value, cachedAt: new Date(), ttl };
 }
 
 function isValid(key: string): boolean {
@@ -61,6 +65,10 @@ function delete_(key: string): boolean {
     return false;
 }
 
+function clear(): void {
+    Object.keys(theCache).forEach((key: string) => delete theCache[key]);
+}
+
 function keys(filterFunc?: (s: string) => boolean): string[] {
     if (filterFunc) {
         return Object.keys(theCache).filter(filterFunc);
@@ -69,6 +77,14 @@ function keys(filterFunc?: (s: string) => boolean): string[] {
     }
 }
 
-function clear(): void {
-    Object.keys(theCache).forEach((key: string) => delete theCache[key]);
+export function validateKey(key: any): boolean {
+    if (typeof key === 'number') {
+        return isFinite(key);
+    }
+
+    if (typeof key === 'string') {
+        return true;
+    }
+
+    return false;
 }

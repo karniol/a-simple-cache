@@ -11,20 +11,20 @@ chai.use(sinonChai);
 
 describe('Memoize', () => {
     let clock: SinonFakeTimers;
-    let simpleCacheStub: ReplacedInstance<typeof Cache>;
+    let cacheStub: ReplacedInstance<typeof Cache>;
     let hashStub: ReplacedInstance<typeof HashCode>;
 	
     const ttl = 1000;
 
     beforeEach(() => {
         clock = sinon.useFakeTimers();
-        simpleCacheStub = replaceObject(Cache);
+        cacheStub = replaceObject(Cache);
         hashStub = replaceObject(HashCode);
     });
 
     afterEach(() => {
         clock.restore();
-        simpleCacheStub.restore();
+        cacheStub.restore();
         hashStub.restore();
     });
 
@@ -46,7 +46,7 @@ describe('Memoize', () => {
             hashStub.ofFunction.withArgs(myFunc).returns(myFuncHash);
             hashStub.ofString.withArgs(givenArgs.toString()).returns(givenArgsHash);
 
-            simpleCacheStub.isValid.returns(false);
+            cacheStub.isValid.returns(false);
             memoizedFunc = Memoize.it(myFunc, ttl);
         });
 
@@ -54,31 +54,31 @@ describe('Memoize', () => {
             it('yes', () => {
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.isValid).to.be.called;
+                expect(cacheStub.isValid).to.be.called;
             });
 
             it('using the correct key', () => {
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.isValid).to.be.calledWith(correctCacheKey);
+                expect(cacheStub.isValid).to.be.calledWith(correctCacheKey);
             });
         });
 
         describe('gets value from cache', () => {
             it('yes', () => {
-                simpleCacheStub.isValid.returns(true);
+                cacheStub.isValid.returns(true);
 	
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.get).to.be.called;
+                expect(cacheStub.get).to.be.called;
             });
 	
             it('using the correct key', () => {
-                simpleCacheStub.isValid.returns(true);
+                cacheStub.isValid.returns(true);
 	
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.get).to.be.calledWith(correctCacheKey);
+                expect(cacheStub.get).to.be.calledWith(correctCacheKey);
             });
         });
 
@@ -86,25 +86,25 @@ describe('Memoize', () => {
             it('yes', () => {
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.set).to.be.called;
+                expect(cacheStub.set).to.be.called;
             });
 	
             it('using the correct key', () => {
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.set).to.be.calledWith(correctCacheKey);
+                expect(cacheStub.set).to.be.calledWith(correctCacheKey);
             });
 
             it('using the correct value', () => {
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.set).to.be.calledWith(correctCacheKey, correctValue);
+                expect(cacheStub.set).to.be.calledWith(correctCacheKey, correctValue);
             });
 	
             it('using the correct TTL', () => {
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.set).to.be.calledWith(correctCacheKey, correctValue, ttl);
+                expect(cacheStub.set).to.be.calledWith(correctCacheKey, correctValue, ttl);
             });
         });
 
@@ -124,11 +124,11 @@ describe('Memoize', () => {
             it('caches result', () => {
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.isValid).to.be.calledOnce;
-                expect(simpleCacheStub.get).to.not.be.called;
+                expect(cacheStub.isValid).to.be.calledOnce;
+                expect(cacheStub.get).to.not.be.called;
                 expect(myFunc).to.be.calledOnce;
                 expect(myFunc).to.be.calledWith(...givenArgs);
-                expect(simpleCacheStub.set).to.be.calledOnce;
+                expect(cacheStub.set).to.be.calledOnce;
             });
         });
 
@@ -136,14 +136,14 @@ describe('Memoize', () => {
             it('gets value from cache if no time has passed', () => {
                 memoizedFunc(...givenArgs);
 	
-                simpleCacheStub.isValid.returns(true);
-                simpleCacheStub.get.returns(correctValue);
+                cacheStub.isValid.returns(true);
+                cacheStub.get.returns(correctValue);
 	
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.isValid).to.be.calledTwice;
-                expect(simpleCacheStub.get).to.be.calledOnce;
-                expect(simpleCacheStub.set).to.be.calledOnce;
+                expect(cacheStub.isValid).to.be.calledTwice;
+                expect(cacheStub.get).to.be.calledOnce;
+                expect(cacheStub.set).to.be.calledOnce;
                 expect(myFunc).to.be.calledOnce;
                 expect(myFunc).to.be.calledWith(...givenArgs);
             });
@@ -151,8 +151,8 @@ describe('Memoize', () => {
             it('returns correct value from cache if no time has passed', () => {
                 const firstResult = memoizedFunc(...givenArgs);
 	
-                simpleCacheStub.isValid.returns(true);
-                simpleCacheStub.get.returns(correctValue);
+                cacheStub.isValid.returns(true);
+                cacheStub.get.returns(correctValue);
 	
                 const secondResult = memoizedFunc(...givenArgs);
 	
@@ -164,14 +164,14 @@ describe('Memoize', () => {
                 memoizedFunc(...givenArgs);
 	
                 clock.tick(ttl - 1);
-                simpleCacheStub.isValid.returns(true);
-                simpleCacheStub.get.returns(correctValue);
+                cacheStub.isValid.returns(true);
+                cacheStub.get.returns(correctValue);
 	
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.isValid).to.be.calledTwice;
-                expect(simpleCacheStub.get).to.be.calledOnce;
-                expect(simpleCacheStub.set).to.be.calledOnce;
+                expect(cacheStub.isValid).to.be.calledTwice;
+                expect(cacheStub.get).to.be.calledOnce;
+                expect(cacheStub.set).to.be.calledOnce;
                 expect(myFunc).to.be.calledOnce;
                 expect(myFunc).to.be.calledWith(...givenArgs);
             });
@@ -180,8 +180,8 @@ describe('Memoize', () => {
                 const firstResult = memoizedFunc(...givenArgs);
 	
                 clock.tick(ttl - 1);
-                simpleCacheStub.isValid.returns(true);
-                simpleCacheStub.get.returns(correctValue);
+                cacheStub.isValid.returns(true);
+                cacheStub.get.returns(correctValue);
 	
                 const secondResult = memoizedFunc(...givenArgs);
 	
@@ -193,13 +193,13 @@ describe('Memoize', () => {
                 memoizedFunc(...givenArgs);
 	
                 clock.tick(ttl);
-                simpleCacheStub.isValid.returns(false);
+                cacheStub.isValid.returns(false);
 	
                 memoizedFunc(...givenArgs);
 	
-                expect(simpleCacheStub.isValid).to.be.calledTwice;
-                expect(simpleCacheStub.get).to.not.be.called;
-                expect(simpleCacheStub.set).to.be.calledTwice;
+                expect(cacheStub.isValid).to.be.calledTwice;
+                expect(cacheStub.get).to.not.be.called;
+                expect(cacheStub.set).to.be.calledTwice;
                 expect(myFunc).to.be.calledTwice;
                 expect(myFunc).to.be.calledWith(...givenArgs);
             });
@@ -208,7 +208,7 @@ describe('Memoize', () => {
                 const result1 = memoizedFunc(...givenArgs);
 	
                 clock.tick(ttl);
-                simpleCacheStub.isValid.returns(false);
+                cacheStub.isValid.returns(false);
 	
                 const result2 = memoizedFunc(...givenArgs);
 	
@@ -241,7 +241,7 @@ describe('Memoize', () => {
                 correctCacheKeys.push(`${myFuncHash}:${givenArgsHashes[i]}`);
             }
 
-            simpleCacheStub.keys.returns(correctCacheKeys);
+            cacheStub.keys.returns(correctCacheKeys);
 
             memoizedFunc = Memoize.it(myFunc, ttl);
 			
@@ -251,21 +251,35 @@ describe('Memoize', () => {
         });
 
         function invalidationTests(): void {
-            it('calls keys on cache', () => {
-                expect(simpleCacheStub.keys).to.be.called;
+            it('calls keys of cache', () => {
+                expect(cacheStub.keys).to.be.called;
             });
 
-            it('calls delete on cache', () => {
-                expect(simpleCacheStub.delete).to.be.called;
+            it('calls keys of cache with a function', () => {
+                expect(typeof cacheStub.keys.getCall(0).args[0]).to.equal('function');
             });
 
-            it('calls delete on cache the correct amount of times', () => {
-                expect(simpleCacheStub.delete).to.have.callCount(correctCacheKeys.length);
+            it('calls keys of cache with the correct function', () => {
+                const correctKey = `${myFuncHash}:anything`;
+                const incorrectKey = 'something:anything';
+
+                const func = cacheStub.keys.getCall(0).args[0] as Function;
+
+                expect(func(correctKey)).to.equal(true);
+                expect(func(incorrectKey)).to.equal(false);
             });
 
-            it('calls delete on cache with the correct keys', () => {
+            it('calls delete of cache', () => {
+                expect(cacheStub.delete).to.be.called;
+            });
+
+            it('calls delete of cache the correct amount of times', () => {
+                expect(cacheStub.delete).to.have.callCount(correctCacheKeys.length);
+            });
+
+            it('calls delete of cache with the correct keys', () => {
                 for (const key of correctCacheKeys) {
-                    expect(simpleCacheStub.delete).to.have.been.calledWith(key);
+                    expect(cacheStub.delete).to.have.been.calledWith(key);
                 }
             });
         }
@@ -306,7 +320,7 @@ describe('Memoize', () => {
             (memoizedFunc as any).original(...givenArgs);
 
             for (const stubName of Object.keys(Cache)) {
-                expect(simpleCacheStub[stubName]).to.have.not.been.called;
+                expect(cacheStub[stubName]).to.have.not.been.called;
             }
         });
     });

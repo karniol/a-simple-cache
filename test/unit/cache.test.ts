@@ -1,20 +1,16 @@
 import { expect } from 'chai';
 import sinon, { SinonFakeTimers } from 'sinon';
-import { prettyprint } from '../utils';
 
-import { Cache, theCache } from '../../src/cache';
-
-// eslint-disable-next-line
-const testValues = [0, 42, null, undefined, true, false, [], {}, function() {}];
-
-function addFakeEntry(): string {
-    const key = Math.random().toString(36);
-    theCache[key] = { value: 0, cachedAt: new Date(), ttl: 1 };
-    return key;
-}
+import { Cache, theCache, validateKey } from '../../src/cache';
 
 describe('SimpleCache', () => {
     let clock: SinonFakeTimers;
+
+    function addFakeEntry(): string {
+        const key = Math.random().toString(36);
+        theCache[key] = { value: 0, cachedAt: new Date(), ttl: 1 };
+        return key;
+    }
 
     beforeEach(() => {
         clock = sinon.useFakeTimers();
@@ -28,23 +24,118 @@ describe('SimpleCache', () => {
         clock.restore();
     });
 
+    describe('validateKey', () => {
+        describe('returns true for', () => {
+            const goodCases = {
+                'number': 0,
+                'string': 'key',
+            };
+    
+            for (const type in goodCases) {
+                it(`${type}`, () => {
+                    const actual = validateKey(goodCases[type]);
+    
+                    expect(actual).to.equal(true);
+                });
+            }
+        });
+
+        describe('returns false for', () => {
+            const badCases = {
+                'null': null,
+                'undefined': undefined,
+                'true': true,
+                'false': false,
+                'NaN': NaN,
+                '-Infinity': -Infinity,
+                'array': [],
+                'object': {},
+                // eslint-disable-next-line
+                'function': function() {},
+            };
+    
+            for (const type in badCases) {
+                it(`${type}`, () => {
+                    const actual = validateKey(badCases[type]);
+    
+                    expect(actual).to.equal(false);
+                });
+            }
+        });
+    });
+
     describe('set', () => {
-        it('does not throw error when TTL is positive', () => {
-            const goodCall = (): void => Cache.set('1', 'Hello, world!', 9001);
+        describe('accepts', () => {
+            const goodCases = {
+                'number': 0,
+                'string': 'key',
+            };
 
-            expect(goodCall).to.not.throw;
+            for (const type in goodCases) {
+                it(`${type}`, () => {
+                    const actual = validateKey(goodCases[type]);
+    
+                    expect(actual).to.equal(true);
+                });
+            }
         });
 
-        it('throws error when TTL is zero', () => {
-            const badCall = (): void => Cache.set('1', 'Hello, world?', 0);
+        describe('does not throw if key of type', () => {
+            const goodCases = {
+                'number': 0,
+                'string': 'key',
+            };
 
-            expect(badCall).to.throw(RangeError);
+            for (const type of Object.keys(goodCases)) {
+                it(`${type}`, () => {
+                    const goodCall = (): void => Cache.set(goodCases[type], 0, 1);
+        
+                    expect(goodCall).to.not.throw();
+                });
+            }
         });
 
-        it('throws error when TTL is negative', () => {
-            const sadCall = (): void => Cache.set('1', 'Goodbye, world... :(', -9001);
+        describe('throws if key of type', () => {
+            const badCases = {
+                'null': null,
+                'undefined': undefined,
+                'true': true,
+                'false': false,
+                'NaN': NaN,
+                '-Infinity': -Infinity,
+                'array': [],
+                'object': {},
+                // eslint-disable-next-line
+                'function': function() {},
+            };
 
-            expect(sadCall).to.throw(RangeError);
+            for (const type of Object.keys(badCases)) {
+                it(`${type}`, () => {
+                    const badCall = (): void => Cache.set(badCases[type], 0, 1);
+        
+                    expect(badCall).to.throw();
+                });
+            }
+        });
+
+        describe('setting TTL', () => {
+            it('does not throw if positive', () => {
+                const goodCall = (): void => Cache.set('1', 0, 1);
+    
+                expect(goodCall).to.not.throw();
+            });
+    
+            it('throws if zero', () => {
+                const badCall = (): void => Cache.set('1', 'Hello, world?', 0);
+    
+                expect(badCall).to.throw();
+            });
+    
+            it('throws if negative', () => {
+                const sadCall = (): void => Cache.set('1', 'Goodbye, world... :(', -1);
+    
+                expect(sadCall).to.throw();
+            });
         });
     });
 
@@ -55,16 +146,31 @@ describe('SimpleCache', () => {
     });
 
     describe('set + get', () => {
-        for (const i in testValues) {
-            it(`${prettyprint(testValues[i])}`, () => {
-                Cache.set('1', testValues[i], 1);
-                expect(Cache.get('1')).to.equal(testValues[i]);
-            });
-        }
+        const cases = {
+            '0': 0,
+            'null': null,
+            'undefined': undefined,
+            'true': true,
+            'false': false,
+            '-Infinity': -Infinity,
+            'array': [],
+            'object': {},
+            // eslint-disable-next-line
+            'function': function() {},
+        };
+        
+        describe('sets and gets correct value of type', () => {
+            for (const type in cases) {
+                it(`${type}`, () => {
+                    Cache.set('1', cases[type], 1);
+                    expect(Cache.get('1')).to.equal(cases[type]);
+                });
+            }
 
-        it('NaN', () => {
-            Cache.set('1', NaN, 1);
-            expect(Cache.get('1')).to.be.NaN;
+            it('NaN', () => {
+                Cache.set('1', NaN, 1);
+                expect(Cache.get('1')).to.be.NaN;
+            });
         });
     });
 
@@ -143,6 +249,7 @@ describe('SimpleCache', () => {
                 addFakeEntry();
             }
 
+            expect(Cache.keys()).to.not.equal(1);
             expect(Cache.keys(k => k.startsWith(key)).length).to.equal(1);
         });
     });

@@ -1,34 +1,44 @@
 import { expect } from 'chai';
-import { prettyprint } from '../utils';
 
 import { HashCode } from '../../src/hash';
 
-// eslint-disable-next-line
-const badCases: any[] = [0, 42, null, undefined, true, false, [], {}, function() {}];
-
 describe('Hash', () => {
+    const cases = {
+        '0': 0,
+        'null': null,
+        'undefined': undefined,
+        'true': true,
+        'false': false,
+        'NaN': NaN,
+        '-Infinity': -Infinity,
+        'array': [],
+        'object': {},
+        // eslint-disable-next-line
+        'function': function() {},
+    };
+    
     describe('of', () => {
         describe('returns non-0 for', () => {
-            for (const i in badCases) {
-                it(`${prettyprint(badCases[i])}`, () => {
-                    expect(HashCode.of(badCases[i])).to.not.equal(0);
+            for (const type in cases) {
+                it(`${type}`, () => {
+                    expect(HashCode.of(cases[type])).to.not.equal(0);
                 });
             }
         });
 
         describe('returns non-undefined for', () => {
-            for (const i in badCases) {
-                it(`${prettyprint(badCases[i])}`, () => {
-                    expect(HashCode.of(badCases[i])).to.not.be.undefined;
+            for (const type in cases) {
+                it(`${type}`, () => {
+                    expect(HashCode.of(cases[type])).to.not.be.undefined;
                 });
             }
         });
 
-        it('hashes for unique values are different', () => {
+        it('returns different hashes for unique values', () => {
             const hashes: number[] = [];
 
-            for (const i in badCases) {
-                const hash: number = HashCode.of(badCases[i]);
+            for (const type in cases) {
+                const hash: number = HashCode.of(cases[type]);
                 hashes.push(hash);
             }
 
@@ -57,7 +67,7 @@ describe('Hash', () => {
 
     describe('ofString', () => {
     // https://www.tutorialspoint.com/compile_java_online.php
-        describe('calculates hash correctly', () => {
+        describe('calculates hash correctly for', () => {
             it('Hello, world!', () => {
                 expect(HashCode.ofString('Hello, world!')).to.equal(-1880044555);
             });
@@ -92,9 +102,9 @@ describe('Hash', () => {
         });
 
         describe('returns 0 for', () => {
-            for (const i in badCases) {
-                it(`${prettyprint(badCases[i])}`, () => {
-                    expect(HashCode.ofString((badCases[i] as unknown) as string)).to.equal(0);
+            for (const type in cases) {
+                it(`${type}`, () => {
+                    expect(HashCode.ofString(cases[type])).to.equal(0);
                 });
             }
         });

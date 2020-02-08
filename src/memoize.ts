@@ -41,9 +41,7 @@ function invalidate<F extends Function>(func: F): void {
         funcHash = HashCode.ofFunction(func);
     }
 
-    const associatedKeys = Cache.keys(k => k.startsWith(`${funcHash}:`));
-
-    for (const key of associatedKeys) {
+    for (const key of Cache.keys(k => k.startsWith(`${funcHash}:`))) {
         Cache.delete(key);
     }
 }

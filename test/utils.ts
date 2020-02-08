@@ -13,11 +13,3 @@ export function rand(): string {
 export function memory(): number {
     return Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100;
 }
-
-export function prettyprint(a: any): string {
-    if (Array.isArray(a) && a.length === 0) {
-        return '[]';
-    }
-
-    return `${a}`;
-}
