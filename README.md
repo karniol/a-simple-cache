@@ -142,14 +142,6 @@ memoizedExpensive(0);
 // one hour passes
 // runs function again
 memoizedExpensive(0); 
-
-// runs function
-memoizedExpensive(1);
-memoizedExpensive(2);
-
-// gets value from cache
-memoizedExpensive(1);
-memoizedExpensive(2);
 ```
 
 #### Invalidating a function's cache with `invalidate`
@@ -157,6 +149,12 @@ memoizedExpensive(2);
 Sometimes you need to invalidate the cache prematurely so that the function will start to run again for all argument combinations.
 
 ```ts
+// runs function
+memoizedExpensive(1);
+
+// gets value from cache
+memoizedExpensive(1);
+
 Memoize.invalidate(expensive);
 // or
 Memoize.invalidate(memoizedExpensive);
@@ -164,7 +162,6 @@ Memoize.invalidate(memoizedExpensive);
 // one hour has not passed
 // runs function again
 memoizedExpensive(1);
-memoizedExpensive(2);
 ```
 
 ## Tests
