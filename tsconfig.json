@@ -1,44 +1,45 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": ["es2017", "es7", "es6", "dom"],
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    "removeComments": true,
-
-    /* Strict Type-Checking Options */
-    "strict": true,
-    "noImplicitAny": false,
-    "strictNullChecks": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-
-    /* Additional Checks */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-
-    /* Module Resolution Options */
-    "moduleResolution": "node",
-    "baseUrl": "./",
-    "typeRoots": [
-      "node_modules/@types"
+    "compilerOptions": {
+        "target": "es6",
+        "lib": [
+            "es2017",
+            "es7",
+            "es6",
+            "dom"
+        ],
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "outDir": "./dist",
+        "removeComments": true,
+        /* Strict Type-Checking Options */
+        "strict": true,
+        "noImplicitAny": false,
+        "strictNullChecks": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        /* Additional Checks */
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        /* Module Resolution Options */
+        "moduleResolution": "node",
+        "baseUrl": "./",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "esModuleInterop": true,
+        /* Miscellaneous */
+        "forceConsistentCasingInFileNames": true,
+        "downlevelIteration": true
+    },
+    "include": [
+        "src/**/*.ts"
     ],
-    "esModuleInterop": true,
-
-    /* Miscellaneous */
-    "forceConsistentCasingInFileNames": true,
-    "downlevelIteration": true,
-  },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "test/**/*.test.ts"
-  ]
+    "exclude": [
+        "node_modules",
+        "dist",
+        "test/**/*.test.ts"
+    ]
 }

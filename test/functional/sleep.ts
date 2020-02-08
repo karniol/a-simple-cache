@@ -13,13 +13,13 @@ let options: any = {
 options = {
     ...options,
     iterations: options.cacheFor / options.pollingRate,
-}
+};
 
 const sleepAndScream = Memoize.it(sleepAndScream_, options.cacheFor);
 
-(async () => {
+(async (): Promise<void> => {
     // boo!
-    (async () => {
+    (async (): Promise<void> => {
         let lastCalled = new Date();
         let msBetweenCalls = 0;
 
@@ -38,14 +38,14 @@ const sleepAndScream = Memoize.it(sleepAndScream_, options.cacheFor);
             }
 
             if (i === 1) {
-                log(' !!!!!!!!! Cache invalidated for all callers!')
+                log(' !!!!!!!!! Cache invalidated for all callers!');
                 Memoize.invalidate(sleepAndScream);
             }
         }
     })();
 
     // help me!
-    (async () => {
+    (async (): Promise<void> => {
         let lastCalled = new Date();
         let msBetweenCalls = 0;
 

@@ -6,10 +6,10 @@ const week = 7 * day;
 const month = 30 * day;
 
 export const time = {
-	second,
-	minute,
-	hour,
-	day,
-	week,
-	month,
+    second,
+    minute,
+    hour,
+    day,
+    week,
+    month,
 };
