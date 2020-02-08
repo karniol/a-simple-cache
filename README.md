@@ -2,6 +2,9 @@
 
 Simple in-memory cache with additional utilities.
 
+<hr>
+<hr>
+
 - [`Cache`](#cache)
   - [Importing](#importing)
   - [Caching a value](#caching-a-value)
@@ -15,6 +18,9 @@ Simple in-memory cache with additional utilities.
     - [Memoizing a function with `it`](#memoizing-a-function-with-it)
     - [Invalidating a function's cache with `invalidate`](#invalidating-a-functions-cache-with-invalidate)
 - [Tests](#tests)
+
+<hr>
+<hr>
 
 ## `Cache`
 
