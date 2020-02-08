@@ -6,7 +6,7 @@ export const Memoize = {
     invalidate,
 };
 
-function it<A extends any[], R>(func: (...args: A) => R, ttlMilliseconds: number): (...args: A) => R {
+function it<A extends any[], R>(func: (...args: A) => R, ttl: number): (...args: A) => R {
     const wrapped = function(...args: A): R {
         const key = `${HashCode.ofFunction(func)}:${HashCode.ofString(args.toString())}`;
 
@@ -16,7 +16,7 @@ function it<A extends any[], R>(func: (...args: A) => R, ttlMilliseconds: number
 
         const value = func(...args);
 
-        Cache.set(key, value, ttlMilliseconds);
+        Cache.set(key, value, ttl);
 
         return value;
     };

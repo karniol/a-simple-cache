@@ -9,7 +9,7 @@ const testValues = [0, 42, null, undefined, true, false, [], {}, function() {}];
 
 function addFakeEntry(): string {
     const key = Math.random().toString(36);
-    theCache[key] = { value: 0, cachedAt: new Date(), ttlMilliseconds: 1 };
+    theCache[key] = { value: 0, cachedAt: new Date(), ttl: 1 };
     return key;
 }
 

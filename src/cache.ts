@@ -16,7 +16,7 @@ export interface Cache {
 export interface Entry {
     value: any;
     cachedAt: Date;
-    ttlMilliseconds: number;
+    ttl: number;
 }
 
 function get(key: string): any | null {
@@ -27,12 +27,12 @@ function get(key: string): any | null {
     return null;
 }
 
-function set(key: string, value: any, ttlMilliseconds: number): void {
-    if (ttlMilliseconds <= 0) {
-        throw new RangeError(`SimpleCache: \`ttlMilliseconds\` must be a positive number, got ${ttlMilliseconds}`);
+function set(key: string, value: any, ttl: number): void {
+    if (ttl <= 0) {
+        throw new RangeError(`SimpleCache: \`ttl\` must be a positive number, got ${ttl}`);
     }
 
-    theCache[key] = { value, cachedAt: new Date(), ttlMilliseconds };
+    theCache[key] = { value, cachedAt: new Date(), ttl };
 }
 
 function isValid(key: string): boolean {
@@ -43,7 +43,7 @@ function isValid(key: string): boolean {
     }
 
     if (cachedEntry) {
-        const expiresAt = cachedEntry.cachedAt.getTime() + cachedEntry.ttlMilliseconds;
+        const expiresAt = cachedEntry.cachedAt.getTime() + cachedEntry.ttl;
 
         return new Date().getTime() < expiresAt;
     }
