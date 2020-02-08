@@ -8,38 +8,39 @@
             "dom"
         ],
         "declaration": true,
-        "declarationMap": true,
         "sourceMap": true,
         "outDir": "./dist",
         "removeComments": true,
-        /* Strict Type-Checking Options */
         "strict": true,
         "noImplicitAny": false,
         "strictNullChecks": true,
         "noImplicitThis": true,
         "alwaysStrict": true,
-        /* Additional Checks */
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
-        /* Module Resolution Options */
         "moduleResolution": "node",
         "baseUrl": "./",
-        "typeRoots": [
-            "node_modules/@types"
-        ],
         "esModuleInterop": true,
-        /* Miscellaneous */
         "forceConsistentCasingInFileNames": true,
         "downlevelIteration": true
     },
+    "typeRoots": [
+        "node_modules/@types"
+    ],
+    "types": [
+        "node",
+        "mocha",
+        "chai"
+    ],
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts",
     ],
     "exclude": [
+        "coverage",
         "node_modules",
         "dist",
-        "test/**/*.test.ts"
+        "test/**/*.ts"
     ]
 }
