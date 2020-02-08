@@ -1,23 +1,23 @@
-export function log(...messages: any[]) {
+export function log(...messages: any[]): void {
     console.log(new Date, ...messages);
 }
 
-export function sleep(ms: number) {
+export function sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export function rand(): string {
-    return Math.random().toString(36)
+    return Math.random().toString(36);
 }
 
 export function memory(): number {
-	return Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100;
+    return Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100;
 }
 
-export function prettyprint(a: any) {
-	if (Array.isArray(a) && a.length === 0) {
-		return '[]';
-	}
+export function prettyprint(a: any): string {
+    if (Array.isArray(a) && a.length === 0) {
+        return '[]';
+    }
 
-	return `${a}`
+    return `${a}`;
 }

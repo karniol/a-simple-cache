@@ -4,7 +4,23 @@ import { Memoize } from '../../src/memoize';
 import { Cache } from '../../src/cache';
 
 
-function generateWithNoCache() {
+log('Running generator with no cache');
+generateWithNoCache();
+log('Test with no cache ended');
+Memoize.invalidate(getValue);
+
+log('Running generator with cache then stopping');
+generateWithCacheThenStop();
+log('Test with cache and stopping ended');
+Memoize.invalidate(getValue);
+
+log('Running generator with cache and no stopping');
+generateWithCache();
+log('Test with cache and no stopping ended');
+Memoize.invalidate(getValue);
+
+
+function generateWithNoCache(): void {
     let mem: number;
     let i = 0;
 
@@ -22,7 +38,7 @@ function generateWithNoCache() {
     }
 }
 
-function generateWithCacheThenStop() {
+function generateWithCacheThenStop(): void {
     let mem: number;
     let hasInvalidatedOnce = false;
     let i = 0;
@@ -54,7 +70,7 @@ function generateWithCacheThenStop() {
     }
 }
 
-function generateWithCache() {
+function generateWithCache(): void {
     let mem: number;
     let hasInvalidatedOnce = false;
 
@@ -79,22 +95,7 @@ function generateWithCache() {
     }
 }
 
-log('Running generator with no cache');
-generateWithNoCache();
-log('Test with no cache ended');
-Memoize.invalidate(getValue);
-
-log('Running generator with cache then stopping');
-generateWithCacheThenStop();
-log('Test with cache and stopping ended');
-Memoize.invalidate(getValue);
-
-log('Running generator with cache and no stopping');
-generateWithCache();
-log('Test with cache and no stopping ended');
-Memoize.invalidate(getValue);
-
-function getValue(k: string) {
+function getValue(k: string): object {
     return {
         id: k,
         name: rand(),
@@ -105,8 +106,8 @@ function getValue(k: string) {
                 those: [rand(), rand(), rand()],
             },
             methods: {
-                join: (k: string) => {
-                    return k + rand()
+                join: (k: string): string => {
+                    return k + rand();
                 },
             },
             store: Array(1e6).map(() => rand()),
