@@ -32,9 +32,6 @@
         "url": "https://github.com/karniol/simple-cache/issues"
     },
     "homepage": "https://github.com/karniol/simple-cache#readme",
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com/"
-    },
     "devDependencies": {
         "@istanbuljs/nyc-config-typescript": "^1.0.1",
         "@types/chai": "^4.2.8",
