@@ -24,7 +24,7 @@ Simple in-memory cache with additional utilities.
 
 ## `Cache`
 
-`Cache` is a "low-level" interface for cacheing values to and retrieving values from a global object.
+`Cache` is a "low-level" interface for caching values to and retrieving values from a global object.
 
 ### Importing
 
