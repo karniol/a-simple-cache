@@ -1,5 +1,5 @@
 {
-    "name": "simple-cache",
+    "name": "@karniol/simple-cache",
     "description": "Simple in-memory cache with additional utilities",
     "version": "1.0.0",
     "scripts": {
