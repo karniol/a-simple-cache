@@ -10,6 +10,10 @@ export function rand(): string {
     return Math.random().toString(36);
 }
 
-export function memory(): number {
-    return Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100;
+export function heapUsed(): number {
+    return process.memoryUsage().heapUsed / 1024 / 1024;
+}
+
+export function heapTotal(): number {
+    return process.memoryUsage().heapTotal / 1024 / 1024;
 }

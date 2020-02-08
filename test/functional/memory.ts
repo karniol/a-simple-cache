@@ -1,4 +1,4 @@
-import { rand, log, memory } from '../utils';
+import { rand, log, heapUsed, heapTotal } from '../utils';
 
 import { Memoize } from '../../src/memoize';
 import { Cache } from '../../src/cache';
@@ -21,14 +21,12 @@ Memoize.invalidate(getValue);
 
 
 function generateWithNoCache(): void {
-    let mem: number;
     let i = 0;
 
     while (true) {
         getValue(rand());
 
-        mem = memory();
-        log(mem, 'MB', Cache.keys().length, 'keys');
+        log(heapUsed().toFixed(2), ' / ', heapTotal().toFixed(2), ' / ', Cache.keys().length, 'keys');
 
         i++;
 
@@ -39,7 +37,7 @@ function generateWithNoCache(): void {
 }
 
 function generateWithCacheThenStop(): void {
-    let mem: number;
+    let heap: number;
     let hasInvalidatedOnce = false;
     let i = 0;
 
@@ -52,11 +50,11 @@ function generateWithCacheThenStop(): void {
             getValue(rand());
         }
 
-        mem = memory();
-        log(mem, 'MB', Cache.keys().length, 'keys');
+        heap = heapUsed();
+        log(heap.toFixed(2), ' / ', heapTotal().toFixed(2), ' / ', Cache.keys().length, 'keys');
 
-        if (!hasInvalidatedOnce && mem > 512) {
-            log('Invalidated cache ===========');
+        if (!hasInvalidatedOnce && heap > 512) {
+            log('Invalidated cache');
             Memoize.invalidate(memoizedGetValue);
             hasInvalidatedOnce = true;
             continue;
@@ -64,7 +62,7 @@ function generateWithCacheThenStop(): void {
 
         i++;
 
-        if (i > 100 || mem > 1024) {
+        if (i > 100 || heap > 1024) {
             break;
         }
     }
@@ -79,11 +77,11 @@ function generateWithCache(): void {
     while (true) {
         memoizedGetValue(rand());
 
-        mem = memory();
-        log(mem, 'MB', Cache.keys().length, 'keys');
+        mem = heapUsed();
+        log(mem.toFixed(2), ' / ', heapTotal().toFixed(2), ' / ', Cache.keys().length, 'keys');
 
         if (!hasInvalidatedOnce && mem > 512) {
-            log('Invalidated cache ===========');
+            log('Invalidated cache');
             Memoize.invalidate(getValue);
             hasInvalidatedOnce = true;
             continue;

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "es5",
         "lib": [
             "es2017",
             "es7",
@@ -36,11 +36,13 @@
     ],
     "include": [
         "src/**/*.ts",
+        "test/functional/**/*.ts",
+        "test/utils.ts",
     ],
     "exclude": [
         "coverage",
         "node_modules",
         "dist",
-        "test/**/*.ts"
+        "test/unit/**/*.ts"
     ]
 }
