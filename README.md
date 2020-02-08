@@ -1,5 +1,10 @@
 <h1><pre>a-simple-cache</pre></h1>
 
+
+[![Build Status](https://travis-ci.com/karniol/a-simple-cache.svg?branch=master)](https://travis-ci.com/karniol/a-simple-cache) [![codecov](https://codecov.io/gh/karniol/a-simple-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/karniol/a-simple-cache)
+
+<hr>
+
 Simple in-memory cache with additional utilities.
 
 <hr>

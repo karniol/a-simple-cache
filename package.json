@@ -97,6 +97,7 @@
         "reporter": [
             "text",
             "text-summary",
+            "json",
             "lcov"
         ],
         "report-dir": "./coverage",

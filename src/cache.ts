@@ -7,7 +7,9 @@ export const Cache = {
     clear,
 };
 
-export const theCache: Cache = {};
+export type Key = string;
+
+export type KeyFilter = (key: Key) => boolean;
 
 export interface Cache {
     [key: string]: Entry;
@@ -19,9 +21,11 @@ export interface Entry {
     ttl: number;
 }
 
-function set(key: string | number, value: any, ttl: number): void {
-    if (ttl <= 0) {
-        throw new RangeError(`\`ttl\` must be a positive number, got ${ttl}`);
+export const theCache: Cache = {};
+
+function set(key: Key, value: any, ttl: number): void {
+    if (typeof ttl === 'number' && ttl <= 0) {
+        throw new RangeError(`TTL must be a positive number, got ${ttl}`);
     }
 
     if (!validateKey(key)) {
@@ -31,7 +35,7 @@ function set(key: string | number, value: any, ttl: number): void {
     theCache[key] = { value, cachedAt: new Date(), ttl };
 }
 
-function get(key: string | number): any | null {
+function get(key: Key): any | null {
     if (theCache.hasOwnProperty(key)) {
         return theCache[key].value;
     }
@@ -39,15 +43,15 @@ function get(key: string | number): any | null {
     return null;
 }
 
-function isValid(key: string): boolean {
-    let cachedEntry: Entry | null = null;
+function isValid(key: Key): boolean {
+    let entry: Entry | null = null;
 
     if (theCache.hasOwnProperty(key)) {
-        cachedEntry = theCache[key];
+        entry = theCache[key];
     }
 
-    if (cachedEntry) {
-        const expiresAt = cachedEntry.cachedAt.getTime() + cachedEntry.ttl;
+    if (entry) {
+        const expiresAt = entry.cachedAt.getTime() + entry.ttl;
 
         return new Date().getTime() < expiresAt;
     }
@@ -55,9 +59,9 @@ function isValid(key: string): boolean {
     return false;
 }
 
-function delete_(key: string): boolean {
-    if (theCache.hasOwnProperty(key)) {
-        delete theCache[key];
+function delete_(key: Key): boolean {
+    if (theCache.hasOwnProperty(key as Key)) {
+        delete theCache[key as Key];
 
         return true;
     }
@@ -69,9 +73,9 @@ function clear(): void {
     Object.keys(theCache).forEach((key: string) => delete theCache[key]);
 }
 
-function keys(filterFunc?: (s: string) => boolean): string[] {
-    if (filterFunc) {
-        return Object.keys(theCache).filter(filterFunc);
+function keys(by?: KeyFilter): Key[] {
+    if (by) {
+        return Object.keys(theCache).filter(by);
     } else {
         return Object.keys(theCache);
     }
