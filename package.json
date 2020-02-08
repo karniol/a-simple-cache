@@ -31,6 +31,9 @@
         "url": "https://github.com/karniol/simple-cache/issues"
     },
     "homepage": "https://github.com/karniol/simple-cache#readme",
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/"
+    },
     "devDependencies": {
         "@istanbuljs/nyc-config-typescript": "^1.0.1",
         "@types/chai": "^4.2.8",
@@ -71,16 +74,11 @@
         "spec": [
             "test/**/*.test.ts"
         ],
-        "watch-files": [
-            "src/**/*.ts",
-            "test/**/*.test.ts"
-        ],
         "recursive": true,
         "file": [],
         "require": [
             "ts-node/register",
-            "source-map-support/register",
-            "chai/register-expect"
+            "source-map-support/register"
         ],
         "ui": "bdd",
         "exit": true
@@ -88,18 +86,27 @@
     "nyc": {
         "extends": "@istanbuljs/nyc-config-typescript",
         "all": true,
+        "cache": false,
         "include": [
             "src/**/*.ts"
         ],
         "exclude": [
+            "src/index.ts",
+            "**/*.d.ts",
             "**/*.test.ts"
         ],
         "reporter": [
             "text",
+            "text-summary",
             "lcov"
         ],
         "report-dir": "./coverage",
-        "temp-dir": "./.nyc_output"
+        "temp-dir": "./.nyc_output",
+        "check-coverage": true,
+        "branches": 90,
+        "lines": 90,
+        "functions": 90,
+        "statements": 90
     },
     "eslintConfig": {
         "extends": [
