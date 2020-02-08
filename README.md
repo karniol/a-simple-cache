@@ -1,4 +1,4 @@
-<h1><pre>simple-cache</pre></h1>
+<h1><pre>a-simple-cache</pre></h1>
 
 Simple in-memory cache with additional utilities.
 
@@ -27,7 +27,7 @@ Simple in-memory cache with additional utilities.
 ### Importing
 
 ```ts
-import { Cache } from 'simple-cache';
+import { Cache } from 'a-simple-cache';
 ```
 
 ### Caching a value
@@ -109,7 +109,7 @@ Cache.keys();
 Caching time is expressed as a number of milliseconds, but the library provides a few convenience constants.
 
 ```ts
-import { time } from 'simple-cache';
+import { time } from 'a-simple-cache';
 
 time.second, time.minute, time.hour
 1000, 60000, 3600000
@@ -125,7 +125,7 @@ time.day, time.week, time.month
 #### Memoizing a function with `it`
 
 ```ts
-import { Memoize } from 'simple-cache';
+import { Memoize } from 'a-simple-cache';
 
 function expensive(arg) { ... }
 
