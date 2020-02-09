@@ -6,9 +6,15 @@ export const Memoize = {
     invalidate,
 };
 
-function it<A extends any[], R>(func: (...args: A) => R, ttl: number): (...args: A) => R {
-    const wrapped = function(...args: A): R {
-        const key = `${HashCode.ofFunction(func)}:${HashCode.ofString(args.toString())}`;
+export type AnyFunction<A extends any[], R> = (...args: A) => R;
+
+export type MemoizedFunction<A extends any[], R> = AnyFunction<A, R> & { __func: AnyFunction<A, R>; __funcHash: number };
+
+function it<A extends any[], R>(func: AnyFunction<A, R>, ttl: number): MemoizedFunction<A, R> {
+    const funcHash = HashCode.ofFunction(func);
+    
+    const memoized = Object.defineProperties(function(...args: A): R {
+        const key = `${funcHash}:` + `${HashCode.of(args)}`;
 
         if (Cache.isValid(key)) {
             return Cache.get(key);
@@ -19,24 +25,19 @@ function it<A extends any[], R>(func: (...args: A) => R, ttl: number): (...args:
         Cache.set(key, value, ttl);
 
         return value;
-    };
-
-    // keep reference to original func
-    Object.defineProperty(wrapped, 'original', {
-        value: func,
-        writable: false
+    }, { 
+        __func: { value: func, writable: false },
+        __funcHash: { value: funcHash, writable: false }
     });
 
-    return wrapped;
+    return memoized;
 }
 
-function invalidate<F extends Function>(func: F): void {
-    const original = (func as any).original;
-
+function invalidate<A extends any[], R>(func: AnyFunction<A, R> | MemoizedFunction<A, R>): void {
     let funcHash: number;
 
-    if (typeof original === 'function') {
-        funcHash = HashCode.ofFunction(original);
+    if (typeof (func as MemoizedFunction<A,R>).__func === 'function') {
+        funcHash = (func as MemoizedFunction<A,R>).__funcHash;
     } else {
         funcHash = HashCode.ofFunction(func);
     }
