@@ -6,22 +6,22 @@ export const HashCode = {
 
 function of(a: any): number {
     if (a === null) {
-        return HashCode.ofString('null');
+        return ofString('null');
     }
 
     if (a === undefined) {
-        return HashCode.ofString('undefined');
+        return ofString('undefined');
     }
 
-    if (Array.isArray(a) && a.length === 0) {
-        return HashCode.ofString('[]');
+    if (Array.isArray(a)) {
+        return ofString(`[${a}]`);
     }
 
     if (typeof a.toString === 'function') {
-        return HashCode.ofString(a.toString());
+        return ofString(a.toString());
     }
 
-    return HashCode.ofString(a);
+    return ofString(a);
 }
 
 // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
@@ -30,16 +30,16 @@ function ofString(s: string): number {
         return 0;
     }
 
-    let hash = 0;
-    let char: number;
+    const len = s.length;
 
-    if (s.length === 0) {
-        return hash;
+    if (len === 0) {
+        return 0;
     }
 
-    for (let i = 0; i < s.length; i++) {
-        char = s.charCodeAt(i);
-        hash = (hash << 5) - hash + char;
+    let hash = 0;
+
+    for (let i = 0; i < len; ++i) {
+        hash = (hash << 5) - hash + s.charCodeAt(i);
         hash |= 0;
     }
 
@@ -47,5 +47,5 @@ function ofString(s: string): number {
 }
 
 function ofFunction<F extends Function>(f: F): number {
-    return HashCode.ofString(`${f.name}:${f.toString().replace(/\s/g, '')}`);
+    return ofString(`${f.name}${f.toString().replace(/\s/g, '')}`);
 }
