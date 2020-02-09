@@ -5,7 +5,7 @@ import { replaceObject, ReplacedInstance } from 'ts-sinon';
 
 import { HashCode } from '../../src/hash';
 import { Cache } from '../../src/cache';
-import { Memoize } from '../../src/memoize';
+import { Memoize, MemoizedFunction } from '../../src/memoize';
 
 chai.use(sinonChai);
 
@@ -32,7 +32,7 @@ describe('Memoize', () => {
         let myFunc: sinon.SinonStub;
         const myFuncHash = 1234;
 
-        let memoizedFunc: Function;
+        let memoizedFunc: MemoizedFunction<any[], any>;
 
         const givenArgs = [false, 0, ''];
         const givenArgsHash = 5678;
@@ -44,7 +44,7 @@ describe('Memoize', () => {
             myFunc.withArgs(...givenArgs).returns(correctValue);
 
             hashStub.ofFunction.withArgs(myFunc).returns(myFuncHash);
-            hashStub.ofString.withArgs(givenArgs.toString()).returns(givenArgsHash);
+            hashStub.of.withArgs(givenArgs).returns(givenArgsHash);
 
             cacheStub.isValid.returns(false);
             memoizedFunc = Memoize.it(myFunc, ttl);
@@ -218,11 +218,63 @@ describe('Memoize', () => {
         });
     });
 
+    describe('__func', () => {
+        let myFunc: sinon.SinonStub;
+
+        const givenArgs = [false, 0, ''];
+
+        let memoizedFunc: MemoizedFunction<any[], any>;
+
+        beforeEach(() => {
+            myFunc = sinon.stub();
+            memoizedFunc = Memoize.it(myFunc, ttl);
+        });
+
+        it('property exists', () => {
+            expect(typeof memoizedFunc.__func).to.equal('function');
+        });
+
+        it('value is correct', () => {
+            expect(memoizedFunc.__func).to.equal(myFunc);
+        });
+
+        it('does not invoke cache when called', () => {
+            memoizedFunc.__func(...givenArgs);
+
+            for (const stubName of Object.keys(Cache)) {
+                expect(cacheStub[stubName]).to.have.not.been.called;
+            }
+        });
+    });
+
+    describe('__funcHash', () => {
+        let myFunc: sinon.SinonStub;
+        const myFuncHash = 1234;
+
+        let memoizedFunc: MemoizedFunction<any[], any>;
+
+        beforeEach(() => {
+            myFunc = sinon.stub();
+
+            hashStub.ofFunction.withArgs(myFunc).returns(myFuncHash);
+
+            memoizedFunc = Memoize.it(myFunc, ttl);
+        });
+
+        it('property exists', () => {
+            expect(typeof memoizedFunc.__funcHash).to.equal('number');
+        });
+
+        it('value is correct', () => {
+            expect(memoizedFunc.__funcHash).to.equal(myFuncHash);
+        });
+    });
+
     describe('invalidate', () => {
         let myFunc: sinon.SinonStub;
         const myFuncHash = 1234;
 
-        let memoizedFunc: Function;
+        let memoizedFunc: MemoizedFunction<any[], any>;
 
         const givenArgs = [1, 2, 3, 4];
         const correctValues = ['one', 'two', 'three', 'four'];
@@ -237,7 +289,7 @@ describe('Memoize', () => {
 		
             for (const i in givenArgs) {
                 myFunc.withArgs(givenArgs[i]).returns(correctValues[i]);
-                hashStub.ofString.withArgs(givenArgs[i].toString()).returns(givenArgsHashes[i]);
+                hashStub.of.withArgs(givenArgs[i]).returns(givenArgsHashes[i]);
                 correctCacheKeys.push(`${myFuncHash}:${givenArgsHashes[i]}`);
             }
 
@@ -298,30 +350,6 @@ describe('Memoize', () => {
             });
 
             invalidationTests();
-        });
-    });
-
-    describe('original', () => {
-        let myFunc: sinon.SinonStub;
-        let memoizedFunc: Function;
-
-        const givenArgs = [false, 0, ''];
-
-        beforeEach(() => {
-            myFunc = sinon.stub();
-            memoizedFunc = Memoize.it(myFunc, ttl);
-        });
-
-        it('property exists', () => {
-            expect((memoizedFunc as any).original).to.equal(myFunc);
-        });
-
-        it('does not invoke cache when called', () => {
-            (memoizedFunc as any).original(...givenArgs);
-
-            for (const stubName of Object.keys(Cache)) {
-                expect(cacheStub[stubName]).to.have.not.been.called;
-            }
         });
     });
 });
