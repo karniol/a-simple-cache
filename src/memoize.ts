@@ -13,24 +13,23 @@ export type MemoizedFunction<A extends any[], R> = AnyFunction<A, R> & { __func:
 function it<A extends any[], R>(func: AnyFunction<A, R>, ttl: number): MemoizedFunction<A, R> {
     const funcHash = HashCode.ofFunction(func);
     
-    const memoized = Object.defineProperties(function(...args: A): R {
-        const key = `${funcHash}:` + `${HashCode.of(args)}`;
+    return Object.defineProperties(
+        function(...args: A): R {
+            const key = `${funcHash}:` + `${HashCode.of(args)}`;
 
-        if (Cache.isValid(key)) {
-            return Cache.get(key);
-        }
+            if (Cache.isValid(key)) {
+                return Cache.get(key);
+            }
 
-        const value = func(...args);
+            const value = func(...args);
 
-        Cache.set(key, value, ttl);
+            Cache.set(key, value, ttl);
 
-        return value;
-    }, { 
-        __func: { value: func, writable: false },
-        __funcHash: { value: funcHash, writable: false }
-    });
-
-    return memoized;
+            return value;
+        }, { 
+            __func: { value: func, writable: false },
+            __funcHash: { value: funcHash, writable: false }
+        });
 }
 
 function invalidate<A extends any[], R>(func: AnyFunction<A, R> | MemoizedFunction<A, R>): void {
