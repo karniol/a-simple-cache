@@ -9,7 +9,7 @@
         ],
         "declaration": true,
         "sourceMap": true,
-        "outDir": "./dist",
+        "outDir": "./out",
         "removeComments": true,
         "strict": true,
         "noImplicitAny": false,
@@ -31,16 +31,8 @@
     ],
     "types": [
         "node",
-        "mocha",
-        "chai"
     ],
     "include": [
-        "src/**/*.ts",
+        "*.ts",
     ],
-    "exclude": [
-        "coverage",
-        "node_modules",
-        "dist",
-        "test/**/*.ts"
-    ]
 }

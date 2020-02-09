@@ -4,10 +4,9 @@
     "version": "1.0.4",
     "scripts": {
         "build": "tsc",
+        "build:functional": "tsc -p test/functional/tsconfig.json",
         "prepare": "npm run build",
         "test": "mocha",
-        "test:functional:sleep": "ts-node test/functional/sleep.ts",
-        "test:functional:memory": "ts-node test/functional/memory.ts",
         "coverage": "nyc npm run test",
         "coverage:open": "nyc npm run test && open coverage/lcov-report/index.html",
         "lint": "eslint . --ext .ts",
