@@ -11,20 +11,20 @@ export type Key = string;
 
 export type KeyFilter = (key: Key) => boolean;
 
-export interface Cache {
-    [key: string]: Entry;
-}
-
 export interface Entry {
     value: any;
     cachedAt: Date;
     ttl: number;
 }
 
+export interface Cache {
+    [key: string]: Entry;
+}
+
 export const theCache: Cache = {};
 
 function set(key: Key, value: any, ttl: number): void {
-    if (typeof ttl === 'number' && ttl <= 0) {
+    if (ttl <= 0) {
         throw new RangeError(`TTL must be a positive number, got ${ttl}`);
     }
 
@@ -44,11 +44,7 @@ function get(key: Key): any | null {
 }
 
 function isValid(key: Key): boolean {
-    let entry: Entry | null = null;
-
-    if (theCache.hasOwnProperty(key)) {
-        entry = theCache[key];
-    }
+    const entry: Entry = theCache[key];
 
     if (entry) {
         const expiresAt = entry.cachedAt.getTime() + entry.ttl;
