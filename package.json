@@ -7,7 +7,7 @@
         "build:functional": "tsc -p test/functional/tsconfig.json",
         "prepare": "npm run build",
         "test": "npm run mocha:issue:4179 && mocha",
-        "mocha:issue:4179": "mkdir -p dist/src && touch dist/src/index.js",
+        "mocha:issue:4179": "mkdir -p dist && touch dist/index.js",
         "coverage": "nyc npm run test",
         "coverage:open": "open coverage/lcov-report/index.html",
         "lint": "eslint . --ext .ts",
@@ -60,8 +60,8 @@
         "typescript": "^3.7.5"
     },
     "dependencies": {},
-    "main": "./dist/src/index.js",
-    "types": "./dist/src/index.d.ts",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "files": [
         "/dist"
     ],
