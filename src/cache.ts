@@ -1,31 +1,41 @@
-export const Cache = {
-    has,
+export interface Cache {
+    set: typeof set;
+    get: typeof get;
+    has: typeof has;
+    isValid: typeof isValid;
+    delete: typeof delete_;
+    keys: typeof keys;
+    clear: typeof clear;
+}
+
+export const Cache: Cache = {
     set,
     get,
+    has,
     isValid,
     delete: delete_,
     keys,
     clear,
 };
 
-export type Key = string;
+type Key = string;
 
-export type KeyFilter = (key: Key) => boolean;
+type KeyFilter = (key: Key) => boolean;
 
-export interface Entry {
+type Entry = {
     value: any;
     cachedAt: Date;
     ttl: number;
 }
 
-export interface Cache {
+type CacheObject = {
     [key: string]: Entry;
 }
 
-export const theCache: Cache = Object.create(null);
+export const cacheObject: CacheObject = Object.create(null);
 
 function has(key: Key): boolean {
-    return (key in theCache);
+    return (key in cacheObject);
 }
 
 function set(key: Key, value: any, ttl: number): void {
@@ -37,15 +47,15 @@ function set(key: Key, value: any, ttl: number): void {
         throw new TypeError('key must be a non-empty string or a number');
     }
 
-    theCache[key] = { value, cachedAt: new Date(), ttl };
+    cacheObject[key] = { value, cachedAt: new Date(), ttl };
 }
 
 function get(key: Key): any | null {
-    return has(key) ? theCache[key].value : null;
+    return has(key) ? cacheObject[key].value : null;
 }
 
 function isValid(key: Key): boolean {
-    const entry: Entry = theCache[key];
+    const entry: Entry = cacheObject[key];
 
     if (entry) {
         const expiresAt = entry.cachedAt.getTime() + entry.ttl;
@@ -57,18 +67,18 @@ function isValid(key: Key): boolean {
 }
 
 function delete_(key: Key): boolean {
-    return has(key) ? delete theCache[key as Key] : false;
+    return has(key) ? delete cacheObject[key as Key] : false;
 }
 
 function clear(): void {
-    Object.keys(theCache).forEach((key: string) => delete theCache[key]);
+    Object.keys(cacheObject).forEach((key: string) => delete cacheObject[key]);
 }
 
 function keys(by?: KeyFilter): Key[] {
     if (by) {
-        return Object.keys(theCache).filter(by);
+        return Object.keys(cacheObject).filter(by);
     } else {
-        return Object.keys(theCache);
+        return Object.keys(cacheObject);
     }
 }
 
