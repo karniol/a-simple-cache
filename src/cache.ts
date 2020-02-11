@@ -6,7 +6,7 @@ export interface Cache {
     delete: typeof delete_;
     keys: typeof keys;
     clear: typeof clear;
-}
+};
 
 export const Cache: Cache = {
     set,
