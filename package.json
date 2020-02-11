@@ -24,9 +24,14 @@
         "url": "git+https://github.com/karniol/a-simple-cache.git"
     },
     "keywords": [
+        "cache",
+        "caching",
         "memcache",
+        "memcached",
         "in-memory",
-        "cache"
+        "memoize",
+        "memoization",
+        "typescript"
     ],
     "author": "Charlie Karniol",
     "license": "MIT",
