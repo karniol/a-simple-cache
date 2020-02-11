@@ -1,14 +1,14 @@
 import { expect } from 'chai';
 import sinon, { SinonFakeTimers } from 'sinon';
 
-import { Cache, theCache, validateKey } from '../../src/cache';
+import { Cache, cacheObject, validateKey } from '../../src/cache';
 
 describe('Cache', () => {
     let clock: SinonFakeTimers;
 
     function addFakeEntry(): string {
         const key = Math.random().toString(36);
-        theCache[key] = { value: 0, cachedAt: new Date(), ttl: 1 };
+        cacheObject[key] = { value: 0, cachedAt: new Date(), ttl: 1 };
         return key;
     }
 
@@ -17,63 +17,11 @@ describe('Cache', () => {
     });
 
     afterEach(() => {
-        for (const key in theCache) {
-            delete theCache[key];
+        for (const key in cacheObject) {
+            delete cacheObject[key];
         }
 
         clock.restore();
-    });
-
-    describe('validateKey', () => {
-        describe('returns true for', () => {
-            const goodCases = {
-                'number': 0,
-                'string': 'key',
-            };
-    
-            for (const type in goodCases) {
-                it(`${type}`, () => {
-                    const actual = validateKey(goodCases[type]);
-    
-                    expect(actual).to.equal(true);
-                });
-            }
-        });
-
-        describe('returns false for', () => {
-            const badCases = {
-                'null': null,
-                'undefined': undefined,
-                'true': true,
-                'false': false,
-                'NaN': NaN,
-                '-Infinity': -Infinity,
-                'array': [],
-                'object': {},
-                'empty string': '',
-                // eslint-disable-next-line
-                'function': function() {},
-            };
-    
-            for (const type in badCases) {
-                it(`${type}`, () => {
-                    const actual = validateKey(badCases[type]);
-    
-                    expect(actual).to.equal(false);
-                });
-            }
-        });
-    });
-
-    describe('has', () => {
-        it('returns false if key not in cache', () => {
-            expect(Cache.has('key')).to.equal(false);
-        });
-
-        it('returns true if key in cache', () => {
-            theCache['key'] = { value: 'value', cachedAt: new Date(), ttl: 1 };
-            expect(Cache.has('key')).to.equal(true);
-        });
     });
 
     describe('set', () => {
@@ -186,6 +134,17 @@ describe('Cache', () => {
         });
     });
 
+    describe('has', () => {
+        it('returns false if key not in cache', () => {
+            expect(Cache.has('key')).to.equal(false);
+        });
+
+        it('returns true if key in cache', () => {
+            cacheObject['key'] = { value: 'value', cachedAt: new Date(), ttl: 1 };
+            expect(Cache.has('key')).to.equal(true);
+        });
+    });
+
     describe('isValid', () => {
         it('returns false when a key has not been added', () => {
             expect(Cache.isValid('key that has not been added yet')).eq(false);
@@ -263,6 +222,47 @@ describe('Cache', () => {
 
             expect(Cache.keys()).to.not.equal(1);
             expect(Cache.keys(k => k.startsWith(key)).length).to.equal(1);
+        });
+    });
+
+    describe('validateKey', () => {
+        describe('returns true for', () => {
+            const goodCases = {
+                'number': 0,
+                'string': 'key',
+            };
+    
+            for (const type in goodCases) {
+                it(`${type}`, () => {
+                    const actual = validateKey(goodCases[type]);
+    
+                    expect(actual).to.equal(true);
+                });
+            }
+        });
+
+        describe('returns false for', () => {
+            const badCases = {
+                'null': null,
+                'undefined': undefined,
+                'true': true,
+                'false': false,
+                'NaN': NaN,
+                '-Infinity': -Infinity,
+                'array': [],
+                'object': {},
+                'empty string': '',
+                // eslint-disable-next-line
+                'function': function() {},
+            };
+    
+            for (const type in badCases) {
+                it(`${type}`, () => {
+                    const actual = validateKey(badCases[type]);
+    
+                    expect(actual).to.equal(false);
+                });
+            }
         });
     });
 });

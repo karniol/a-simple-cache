@@ -1,6 +1,11 @@
 import { Cache } from './cache';
 import { HashCode } from './hash';
 
+export interface Memoize {
+    it: typeof it;
+    invalidate: typeof invalidate;
+};
+
 export const Memoize = {
     it,
     invalidate,
