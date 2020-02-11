@@ -1,3 +1,9 @@
+export interface HashCode {
+    of: typeof of;
+    ofString: typeof ofString;
+    ofFunction: typeof ofFunction;
+}
+
 export const HashCode = {
     of,
     ofString,
