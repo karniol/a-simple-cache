@@ -9,27 +9,26 @@ Simple in-memory cache with additional utilities.
 
 <hr>
 
-- [`Cache`](#cache)
-  - [Caching a value](#caching-a-value)
-  - [Retrieving a value](#retrieving-a-value)
-  - [Checking if a key exists](#checking-if-a-key-exists)
-  - [Checking if an entry is valid](#checking-if-an-entry-is-valid)
-  - [Listing keys of entries](#listing-keys-of-entries)
-  - [Deleting entries](#deleting-entries)
-- [Utilities](#utilities)
-  - [`time`](#time)
-  - [`Memoize`](#memoize)
-    - [Memoizing a function with `it`](#memoizing-a-function-with-it)
-    - [Invalidating a function's cache with `invalidate`](#invalidating-a-functions-cache-with-invalidate)
+- [Basic functions](#basic-functions)
+  - [`set`: caching a value](#set-caching-a-value)
+  - [`get`: retrieving a value](#get-retrieving-a-value)
+  - [`has`: checking if a key exists](#has-checking-if-a-key-exists)
+  - [`isValid`: checking if an entry is valid](#isvalid-checking-if-an-entry-is-valid)
+  - [`keys`: listing keys of entries](#keys-listing-keys-of-entries)
+  - [`delete`: deleting entries](#delete-deleting-entries)
+- [`time` constants](#time-constants)
+- [Extended functions](#extended-functions)
+    - [`memoize`: memoizing a function](#memoize-memoizing-a-function)
+    - [`invalidate`: invalidating a function's cache](#invalidate-invalidating-a-functions-cache)
 - [Tests](#tests)
 
 <hr>
 
-## `Cache`
+## Basic functions
 
 `Cache` is a low-level interface for storing values to and retrieving values from a global object.
 
-### Caching a value
+### `set`: caching a value
 
 ```ts
 import { Cache } from 'a-simple-cache';
@@ -45,7 +44,7 @@ Cache.set('my:id', {
 }, 180000);
 ```
 
-### Retrieving a value
+### `get`: retrieving a value
 
 ```ts
 Cache.get('key');
@@ -55,7 +54,7 @@ Cache.get('my:id');
 { 'number': 42, 'string': 'Hello!' }
 ```
 
-### Checking if a key exists
+### `has`: checking if a key exists
 
 ```ts
 Cache.has('key');
@@ -65,7 +64,7 @@ Cache.has('non-existent key');
 false
 ```
 
-### Checking if an entry is valid
+### `isValid`: checking if an entry is valid
 
 ```ts
 Cache.isValid('key');
@@ -85,7 +84,7 @@ Cache.isValid('my:id');
 false
 ```
 
-### Listing keys of entries
+### `keys`: listing keys of entries
 
 ```ts
 Cache.keys();
@@ -97,7 +96,7 @@ Cache.keys(k => k.startsWith('my:'));
 [ 'my:id' ]
 ```
 
-### Deleting entries
+### `delete`: deleting entries
 
 ```ts
 Cache.clear();
@@ -114,9 +113,7 @@ Cache.keys();
 [ ]
 ```
 
-## Utilities
-
-### `time`
+## `time` constants
 
 Caching time is expressed as a number of milliseconds, but the library provides a few constants for convenience.
 
@@ -131,19 +128,20 @@ time.day, time.week, time.month
 86400000, 604800000, 2592000000
 ```
 
-### `Memoize`
+## Extended functions
 
-`Memoize` is a function wrapper that automatically caches values returned by the function for any given argument combination.
+#### `memoize`: memoizing a function
 
-#### Memoizing a function with `it`
+`memoize` returns a wrapped function that automatically caches values returned by the original function for any given argument combination.
 
-```ts
-import { Memoize } from 'a-simple-cache';
-```
+On subsequent calls to the memoized function, cached values will be retrieved instead of re-running the function.
+
+It is possible to set a time-to-live for the cached values, after which the original function will run again and new values will be stored in the cache.
+
 ```ts
 function expensive(arg) { ... }
 
-const memoizedExpensive = Memoize.it(expensive, time.hour);
+const memoizedExpensive = Cache.memoize(expensive, time.hour);
 ```
 ```ts
 // runs function
@@ -157,7 +155,7 @@ memoizedExpensive(0);
 memoizedExpensive(0); 
 ```
 
-#### Invalidating a function's cache with `invalidate`
+#### `invalidate`: invalidating a function's cache
 
 Sometimes you need to invalidate a function's cache prematurely so that the function will start to run again for all argument combinations.
 
@@ -165,9 +163,9 @@ Sometimes you need to invalidate a function's cache prematurely so that the func
 // gets value from cache
 memoizedExpensive(0);
 
-Memoize.invalidate(memoizedExpensive);
+Cache.invalidate(memoizedExpensive);
 // or 
-Memoize.invalidate(expensive);
+Cache.invalidate(expensive);
 
 // one hour has not passed
 // runs function again

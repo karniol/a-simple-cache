@@ -1,3 +1,5 @@
+import { Memoize } from './memoize';
+
 export interface Cache {
     set: typeof set;
     get: typeof get;
@@ -6,6 +8,8 @@ export interface Cache {
     delete: typeof delete_;
     keys: typeof keys;
     clear: typeof clear;
+    memoize: typeof Memoize.it;
+    invalidate: typeof Memoize.invalidate;
 };
 
 export const Cache: Cache = {
@@ -16,6 +20,8 @@ export const Cache: Cache = {
     delete: delete_,
     keys,
     clear,
+    memoize: Memoize.it,
+    invalidate: Memoize.invalidate,
 };
 
 type Key = string;
