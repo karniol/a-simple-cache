@@ -1,7 +1,7 @@
 {
     "name": "a-simple-cache",
     "description": "Simple in-memory cache with additional utilities",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "scripts": {
         "build": "tsc",
         "build:functional": "tsc -p test/functional/tsconfig.json",
