@@ -3,7 +3,7 @@ import sinon, { SinonFakeTimers } from 'sinon';
 
 import { Cache, theCache, validateKey } from '../../src/cache';
 
-describe('SimpleCache', () => {
+describe('Cache', () => {
     let clock: SinonFakeTimers;
 
     function addFakeEntry(): string {
@@ -50,6 +50,7 @@ describe('SimpleCache', () => {
                 '-Infinity': -Infinity,
                 'array': [],
                 'object': {},
+                'empty string': '',
                 // eslint-disable-next-line
                 'function': function() {},
             };
@@ -61,6 +62,17 @@ describe('SimpleCache', () => {
                     expect(actual).to.equal(false);
                 });
             }
+        });
+    });
+
+    describe('has', () => {
+        it('returns false if key not in cache', () => {
+            expect(Cache.has('key')).to.equal(false);
+        });
+
+        it('returns true if key in cache', () => {
+            theCache['key'] = { value: 'value', cachedAt: new Date(), ttl: 1 };
+            expect(Cache.has('key')).to.equal(true);
         });
     });
 

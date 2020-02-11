@@ -1,7 +1,7 @@
 <h1><pre>a-simple-cache</pre></h1>
 
 
-[![Build Status](https://travis-ci.com/karniol/a-simple-cache.svg?branch=master)](https://travis-ci.com/karniol/a-simple-cache) [![codecov](https://codecov.io/gh/karniol/a-simple-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/karniol/a-simple-cache)
+[![Travis CI Build Status](https://travis-ci.com/karniol/a-simple-cache.svg?branch=master)](https://travis-ci.com/karniol/a-simple-cache) [![Codecov Code Coverage](https://codecov.io/gh/karniol/a-simple-cache/branch/master/graph/badge.svg)](https://codecov.io/gh/karniol/a-simple-cache) [![a-simple-cache on npm](https://img.shields.io/npm/v/a-simple-cache.svg)](https://npmjs.com/package/a-simple-cache)
 
 <hr>
 
@@ -10,9 +10,9 @@ Simple in-memory cache with additional utilities.
 <hr>
 
 - [`Cache`](#cache)
-  - [Importing](#importing)
   - [Caching a value](#caching-a-value)
   - [Retrieving a value](#retrieving-a-value)
+  - [Checking if a key exists](#checking-if-a-key-exists)
   - [Checking if an entry is valid](#checking-if-an-entry-is-valid)
   - [Listing keys of entries](#listing-keys-of-entries)
   - [Deleting entries](#deleting-entries)
@@ -29,14 +29,11 @@ Simple in-memory cache with additional utilities.
 
 `Cache` is a low-level interface for storing values to and retrieving values from a global object.
 
-### Importing
+### Caching a value
 
 ```ts
 import { Cache } from 'a-simple-cache';
 ```
-
-### Caching a value
-
 ```ts
 // for one minute
 Cache.set('key', 'value', 60000);
@@ -56,6 +53,16 @@ Cache.get('key');
 
 Cache.get('my:id');
 { 'number': 42, 'string': 'Hello!' }
+```
+
+### Checking if a key exists
+
+```ts
+Cache.has('key');
+true
+
+Cache.has('non-existent key');
+false
 ```
 
 ### Checking if an entry is valid
@@ -111,11 +118,12 @@ Cache.keys();
 
 ### `time`
 
-Caching time is expressed as a number of milliseconds, but the library provides a few convenience constants.
+Caching time is expressed as a number of milliseconds, but the library provides a few constants for convenience.
 
 ```ts
 import { time } from 'a-simple-cache';
-
+```
+```ts
 time.second, time.minute, time.hour
 1000, 60000, 3600000
 
@@ -131,11 +139,13 @@ time.day, time.week, time.month
 
 ```ts
 import { Memoize } from 'a-simple-cache';
-
+```
+```ts
 function expensive(arg) { ... }
 
 const memoizedExpensive = Memoize.it(expensive, time.hour);
-
+```
+```ts
 // runs function
 memoizedExpensive(0);
 
@@ -149,22 +159,19 @@ memoizedExpensive(0);
 
 #### Invalidating a function's cache with `invalidate`
 
-Sometimes you need to invalidate the cache prematurely so that the function will start to run again for all argument combinations.
+Sometimes you need to invalidate a function's cache prematurely so that the function will start to run again for all argument combinations.
 
 ```ts
-// runs function
-memoizedExpensive(1);
-
 // gets value from cache
-memoizedExpensive(1);
+memoizedExpensive(0);
 
-Memoize.invalidate(expensive);
-// or
 Memoize.invalidate(memoizedExpensive);
+// or 
+Memoize.invalidate(expensive);
 
 // one hour has not passed
 // runs function again
-memoizedExpensive(1);
+memoizedExpensive(0);
 ```
 
 ## Tests

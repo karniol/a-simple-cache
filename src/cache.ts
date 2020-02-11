@@ -1,4 +1,5 @@
 export const Cache = {
+    has,
     set,
     get,
     isValid,
@@ -21,7 +22,11 @@ export interface Cache {
     [key: string]: Entry;
 }
 
-export const theCache: Cache = {};
+export const theCache: Cache = Object.create(null);
+
+function has(key: Key): boolean {
+    return (key in theCache);
+}
 
 function set(key: Key, value: any, ttl: number): void {
     if (ttl <= 0) {
@@ -29,18 +34,14 @@ function set(key: Key, value: any, ttl: number): void {
     }
 
     if (!validateKey(key)) {
-        throw new TypeError('key must be either a string or a number');
+        throw new TypeError('key must be a non-empty string or a number');
     }
 
     theCache[key] = { value, cachedAt: new Date(), ttl };
 }
 
 function get(key: Key): any | null {
-    if (theCache.hasOwnProperty(key)) {
-        return theCache[key].value;
-    }
-
-    return null;
+    return has(key) ? theCache[key].value : null;
 }
 
 function isValid(key: Key): boolean {
@@ -56,13 +57,7 @@ function isValid(key: Key): boolean {
 }
 
 function delete_(key: Key): boolean {
-    if (theCache.hasOwnProperty(key as Key)) {
-        delete theCache[key as Key];
-
-        return true;
-    }
-
-    return false;
+    return has(key) ? delete theCache[key as Key] : false;
 }
 
 function clear(): void {
@@ -83,7 +78,7 @@ export function validateKey(key: any): boolean {
     }
 
     if (typeof key === 'string') {
-        return true;
+        return key.length === 0 ? false : true;
     }
 
     return false;
