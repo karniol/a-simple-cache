@@ -7,6 +7,8 @@
         "build:functional": "tsc -p test/functional/tsconfig.json",
         "prepare": "npm run build",
         "test": "npm run mocha:issue:4179 && mocha",
+        "test:mutations": "stryker run",
+        "test:mutations:open": "open reports/mutation/html/index.html",
         "mocha:issue:4179": "mkdir -p dist && touch dist/index.js",
         "coverage": "nyc npm run test",
         "coverage:open": "open coverage/lcov-report/index.html",
@@ -34,6 +36,11 @@
     "homepage": "https://github.com/karniol/a-simple-cache#readme",
     "devDependencies": {
         "@istanbuljs/nyc-config-typescript": "^1.0.1",
+        "@stryker-mutator/core": "^2.5.0",
+        "@stryker-mutator/html-reporter": "^2.5.0",
+        "@stryker-mutator/mocha-framework": "^2.5.0",
+        "@stryker-mutator/mocha-runner": "^2.5.0",
+        "@stryker-mutator/typescript": "^2.5.0",
         "@types/chai": "^4.2.8",
         "@types/mocha": "^7.0.1",
         "@types/sinon": "^7.5.1",
@@ -71,7 +78,7 @@
             "ts"
         ],
         "spec": [
-            "test/**/*.test.ts"
+            "test/unit/**/*.test.ts"
         ],
         "recursive": true,
         "file": [],
@@ -109,6 +116,11 @@
         "statements": 90
     },
     "eslintConfig": {
+        "ignorePatterns": [
+            "**/*.js",
+            "node_modules/",
+            "**/*.conf.js"
+        ],
         "extends": [
             "plugin:@typescript-eslint/recommended"
         ],

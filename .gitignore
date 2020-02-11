@@ -1,7 +1,10 @@
 .DS_Store
 .nyc_output
+.stryker-tmp
 .vscode
+*.log
 coverage
 dist
 node_modules
+reports
 test/**/out

@@ -31,11 +31,7 @@ function ofString(s: string): number {
     }
 
     const len = s.length;
-
-    if (len === 0) {
-        return 0;
-    }
-
+    
     let hash = 0;
 
     for (let i = 0; i < len; ++i) {

@@ -39,8 +39,9 @@
     ],
     "exclude": [
         "coverage",
-        "node_modules",
         "dist",
-        "test/**/*.ts"
+        "node_modules",
+        "test/**/*.ts",
+        "**/*.conf.js"
     ]
 }

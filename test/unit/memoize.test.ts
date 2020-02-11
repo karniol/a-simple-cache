@@ -234,6 +234,16 @@ describe('Memoize', () => {
             expect(typeof memoizedFunc.__func).to.equal('function');
         });
 
+        it('property is not writable', () => {
+            const descriptor = Object.getOwnPropertyDescriptor(memoizedFunc, '__func');
+
+            if (descriptor) {
+                expect(descriptor.writable).to.equal(false);
+            } else {
+                expect.fail();
+            }
+        });
+
         it('value is correct', () => {
             expect(memoizedFunc.__func).to.equal(myFunc);
         });
@@ -263,6 +273,16 @@ describe('Memoize', () => {
 
         it('property exists', () => {
             expect(typeof memoizedFunc.__funcHash).to.equal('number');
+        });
+
+        it('property is not writable', () => {
+            const descriptor = Object.getOwnPropertyDescriptor(memoizedFunc, '__funcHash');
+
+            if (descriptor) {
+                expect(descriptor.writable).to.equal(false);
+            } else {
+                expect.fail();
+            }
         });
 
         it('value is correct', () => {
