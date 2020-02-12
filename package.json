@@ -1,7 +1,7 @@
 {
     "name": "a-simple-cache",
     "description": "Simple in-memory cache with additional utilities, including memoization and statistics",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "scripts": {
         "build": "tsc",
         "build:functional": "tsc -p test/functional/tsconfig.json",
