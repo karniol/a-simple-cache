@@ -105,7 +105,7 @@ const wrappedCacheMethods: WrappedCacheMethods = {
 
 function initialize(): void {
     if (isEnabled()) {
-        throw new Error('Statistics are already enabled');
+        throw new Error('statistics are already enabled');
     }
 
     for (const methodName of simplyTrackedCacheMethodNames) {

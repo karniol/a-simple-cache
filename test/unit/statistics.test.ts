@@ -60,7 +60,7 @@ describe('Statistics', () => {
 
             const secondCall = (): void => Statistics.enableStatistics();
 
-            expect(secondCall).to.throw();
+            expect(secondCall).to.throw('statistics are already enabled');
         });
 
         it('wraps all tracked cache methods', () => {
