@@ -10,17 +10,17 @@ Simple in-memory cache with additional utilities, including memoization and stat
 <hr>
 
 - [Basic functions](#basic-functions)
-  - [`set`: caching a value](#set-caching-a-value)
-  - [`get`: retrieving a value](#get-retrieving-a-value)
-  - [`has`: checking if a key exists](#has-checking-if-a-key-exists)
-  - [`isValid`: checking if an entry is valid](#isvalid-checking-if-an-entry-is-valid)
-  - [`keys`: listing keys of entries](#keys-listing-keys-of-entries)
-  - [`delete`: deleting entries](#delete-deleting-entries)
-- [`time` constants](#time-constants)
+  - [**set**: caching a value](#set-caching-a-value)
+  - [**get**: retrieving a value](#get-retrieving-a-value)
+  - [**has**: checking if a key exists](#has-checking-if-a-key-exists)
+  - [**isValid**: checking if an entry is valid](#isvalid-checking-if-an-entry-is-valid)
+  - [**keys**: listing keys of entries](#keys-listing-keys-of-entries)
+  - [**delete**: deleting entries](#delete-deleting-entries)
+- [**time** constants](#time-constants)
 - [Extended functions](#extended-functions)
-    - [`memoize`: memoizing a function](#memoize-memoizing-a-function)
-    - [`invalidate`: invalidating a function's cache](#invalidate-invalidating-a-functions-cache)
-    - [`statistics`: get an overview of called cache methods](#statistics-get-an-overview-of-called-cache-methods)
+    - [**memoize**: memoizing a function](#memoize-memoizing-a-function)
+    - [**invalidate**: invalidating a function's cache](#invalidate-invalidating-a-functions-cache)
+    - [**statistics**: get an overview of called cache methods](#statistics-get-an-overview-of-called-cache-methods)
 - [Tests](#tests)
 
 <hr>
@@ -29,7 +29,7 @@ Simple in-memory cache with additional utilities, including memoization and stat
 
 `cache` is an interface for storing values to and retrieving values from a global object.
 
-### `set`: caching a value
+### **set**: caching a value
 
 ```js
 import { cache } from 'a-simple-cache';
@@ -46,7 +46,7 @@ cache.set('my:id', {
 }, 180000);
 ```
 
-### `get`: retrieving a value
+### **get**: retrieving a value
 
 ```js
 cache.get('key');
@@ -57,7 +57,7 @@ cache.get('my:id');
 { number: 42, string: 'Hello!' }
 ```
 
-### `has`: checking if a key exists
+### **has**: checking if a key exists
 
 ```js
 cache.has('key');
@@ -68,7 +68,7 @@ cache.has('non-existent key');
 false
 ```
 
-### `isValid`: checking if an entry is valid
+### **isValid**: checking if an entry is valid
 
 ```js
 cache.isValid('key');
@@ -88,7 +88,7 @@ cache.isValid('my:id');
 false
 ```
 
-### `keys`: listing keys of entries
+### **keys**: listing keys of entries
 
 ```js
 cache.keys();
@@ -100,7 +100,7 @@ cache.keys(k => k.startsWith('my:'));
 [ 'my:id' ]
 ```
 
-### `delete`: deleting entries
+### **delete**: deleting entries
 
 ```js
 cache.clear();
@@ -118,7 +118,7 @@ cache.keys();
 [ ]
 ```
 
-## `time` constants
+## **time** constants
 
 Caching time is expressed as a number of milliseconds, but the library provides a few constants for convenience.
 
@@ -135,7 +135,7 @@ time.day, time.week, time.month
 
 ## Extended functions
 
-#### `memoize`: memoizing a function
+#### **memoize**: memoizing a function
 
 `memoize` returns a wrapped function that automatically caches values returned by the original function for any given argument combination.
 
@@ -162,7 +162,7 @@ memoizedExpensive(0);
 memoizedExpensive(0); 
 ```
 
-#### `invalidate`: invalidating a function's cache
+#### **invalidate**: invalidating a function's cache
 
 Sometimes you need to invalidate a function's cache prematurely so that the function will start to run again for all argument combinations.
 
@@ -181,7 +181,7 @@ cache.invalidate(expensive);
 memoizedExpensive(0);
 ```
 
-#### `statistics`: get an overview of called cache methods
+#### **statistics**: get an overview of called cache methods
 
 ```js
 // call once after importing
