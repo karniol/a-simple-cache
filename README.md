@@ -184,6 +184,7 @@ cache.statistics
 ```json
 {
     set: 0,
+    delete: 0,
     get: {
         hit: 0,
         miss: 0,
@@ -191,8 +192,7 @@ cache.statistics
     isValid: {
         true: 0,
         false: 0,
-    },
-    delete: 0
+    }
 }
 ```
 
