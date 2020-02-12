@@ -72,7 +72,7 @@ type WrappedCacheMethods = {
     [K in keyof TrackedCacheMethods]: typeof Cache[keyof TrackedCacheMethods];
 };
 
-const wrappedCacheMethods: WrappedCacheMethods = {
+export const wrappedCacheMethods: WrappedCacheMethods = {
     set: function(...args: Parameters<typeof Cache.set>): ReturnType<typeof Cache.set> {
         trackMethod('set');
 

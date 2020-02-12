@@ -14,6 +14,7 @@ import {
     hitMissTrackedCacheMethodNames,
     trueFalseTrackedCacheMethodNames,
     simplyTrackedCacheMethodNames,
+    wrappedCacheMethods,
 } from '../../src/statistics';
 
 describe('Statistics', () => {
@@ -66,16 +67,10 @@ describe('Statistics', () => {
         it('wraps all tracked cache methods', () => {
             const cacheStub: ReplacedInstance<typeof Cache> = replaceObject(Cache);
 
-            const originalMethods = {};
-
-            for (const methodName of trackedCacheMethodNames) {
-                originalMethods[methodName] = Cache[methodName];
-            }
-
             Statistics.enableStatistics();
 
             for (const methodName of trackedCacheMethodNames) {
-                expect(Cache[methodName]).to.not.equal(originalMethods[methodName]);
+                expect(Cache[methodName]).to.equal(wrappedCacheMethods[methodName]);
             }
 
             cacheStub.restore();
