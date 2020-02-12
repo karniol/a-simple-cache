@@ -70,8 +70,10 @@ export function delete_(key: Key): boolean {
     return has(key) ? delete cacheObject[key as Key] : false;
 }
 
-function clear(): void {
+function clear(): boolean {
     Object.keys(cacheObject).forEach((key: string) => delete_(key));
+    
+    return true;
 }
 
 function keys(by?: KeyFilter): Key[] {
