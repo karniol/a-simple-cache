@@ -1,21 +1,21 @@
 import { Cache } from './cache';
-import { HashCode } from './hash';
+import { HashCode } from './hashcode';
 
-export interface Memoize {
-    it: typeof it;
+export interface Memoization {
+    memoize: typeof memoize;
     invalidate: typeof invalidate;
 };
 
-export const Memoize = {
-    it,
+export const Memoization: Memoization = {
+    memoize,
     invalidate,
 };
 
-export type AnyFunction<A extends any[], R> = (...args: A) => R;
+type AnyFunction<A extends any[], R> = (...args: A) => R;
 
 export type MemoizedFunction<A extends any[], R> = AnyFunction<A, R> & { __func: AnyFunction<A, R>; __funcHash: number };
 
-function it<A extends any[], R>(func: AnyFunction<A, R>, ttl: number): MemoizedFunction<A, R> {
+function memoize<A extends any[], R>(func: AnyFunction<A, R>, ttl: number): MemoizedFunction<A, R> {
     const funcHash = HashCode.ofFunction(func);
     
     return Object.defineProperties(

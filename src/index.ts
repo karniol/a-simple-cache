@@ -1,11 +1,15 @@
 import { Cache } from './cache';
-import { Memoize } from './memoize';
+import { Memoization } from './memoization';
 import { time } from './time';
 
+interface ASimpleCache extends Cache, Memoization {};
+
+const cache: ASimpleCache = {
+    ...Cache,
+    ...Memoization,
+};
+
 export {
-    Cache, 
-    Cache as cache,
-    Memoize,
-    Memoize as memoize,
+    cache,
     time
 };

@@ -73,7 +73,7 @@ describe('Cache', () => {
                 it(`${type}`, () => {
                     const badCall = (): void => Cache.set(badCases[type], 0, 1);
         
-                    expect(badCall).to.throw();
+                    expect(badCall).to.throw('key must be a non-empty string or a number');
                 });
             }
         });
@@ -86,22 +86,26 @@ describe('Cache', () => {
             });
     
             it('throws if zero', () => {
-                const badCall = (): void => Cache.set('1', 'Hello, world?', 0);
+                const ttl = 0;
+
+                const badCall = (): void => Cache.set('1', 'Hello, world?', ttl);
     
-                expect(badCall).to.throw();
+                expect(badCall).to.throw(`TTL must be a positive number, got ${ttl}`);
             });
     
             it('throws if negative', () => {
-                const sadCall = (): void => Cache.set('1', 'Goodbye, world... :(', -1);
+                const ttl = -1;
+                
+                const sadCall = (): void => Cache.set('1', 'Goodbye, world... :(', ttl);
     
-                expect(sadCall).to.throw();
+                expect(sadCall).to.throw(`TTL must be a positive number, got ${ttl}`);
             });
         });
     });
 
     describe('get', () => {
-        it('returns null when key does not exist', () => {
-            expect(Cache.get('1')).to.equal(null);
+        it('returns undefined when key does not exist', () => {
+            expect(Cache.get('1')).to.be.undefined;
         });
     });
 
@@ -177,13 +181,20 @@ describe('Cache', () => {
     });
 
     describe('delete', () => {
-        it('returns false when trying to delete non-existent key', () => {
+        it('returns false when deleting non-existent key', () => {
             expect(Cache.delete('non-existent')).to.equal(false);
         });
 
         it('returns true when deleting existing key', () => {
-            Cache.set('1', '1', 1);
-            expect(Cache.delete('1')).to.equal(true);
+            const key = addFakeEntry();
+            expect(Cache.delete(key)).to.equal(true);
+        });
+
+        it('deletes entry from cache', () => {
+            const key = addFakeEntry();
+            expect(Object.keys(cacheObject).length).to.equal(1);
+            Cache.delete(key);
+            expect(Object.keys(cacheObject).length).to.equal(0);
         });
     });
 

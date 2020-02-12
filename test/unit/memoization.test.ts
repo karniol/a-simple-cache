@@ -3,13 +3,13 @@ import sinon, { SinonFakeTimers } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { replaceObject, ReplacedInstance } from 'ts-sinon';
 
-import { HashCode } from '../../src/hash';
-import { Cache } from '../../src/cache';
-import { Memoize, MemoizedFunction } from '../../src/memoize';
-
 chai.use(sinonChai);
 
-describe('Memoize', () => {
+import { HashCode } from '../../src/hashcode';
+import { Cache } from '../../src/cache';
+import { Memoization, MemoizedFunction } from '../../src/memoization';
+
+describe('Memoization', () => {
     let clock: SinonFakeTimers;
     let cacheStub: ReplacedInstance<typeof Cache>;
     let hashStub: ReplacedInstance<typeof HashCode>;
@@ -28,7 +28,7 @@ describe('Memoize', () => {
         hashStub.restore();
     });
 
-    describe('it', () => {
+    describe('memoize', () => {
         let myFunc: sinon.SinonStub;
         const myFuncHash = 1234;
 
@@ -47,7 +47,7 @@ describe('Memoize', () => {
             hashStub.of.withArgs(givenArgs).returns(givenArgsHash);
 
             cacheStub.isValid.returns(false);
-            memoizedFunc = Memoize.it(myFunc, ttl);
+            memoizedFunc = Memoization.memoize(myFunc, ttl);
         });
 
         describe('verifies validity of cached value', () => {
@@ -227,7 +227,7 @@ describe('Memoize', () => {
 
         beforeEach(() => {
             myFunc = sinon.stub();
-            memoizedFunc = Memoize.it(myFunc, ttl);
+            memoizedFunc = Memoization.memoize(myFunc, ttl);
         });
 
         it('property exists', () => {
@@ -268,7 +268,7 @@ describe('Memoize', () => {
 
             hashStub.ofFunction.withArgs(myFunc).returns(myFuncHash);
 
-            memoizedFunc = Memoize.it(myFunc, ttl);
+            memoizedFunc = Memoization.memoize(myFunc, ttl);
         });
 
         it('property exists', () => {
@@ -315,7 +315,7 @@ describe('Memoize', () => {
 
             cacheStub.keys.returns(correctCacheKeys);
 
-            memoizedFunc = Memoize.it(myFunc, ttl);
+            memoizedFunc = Memoization.memoize(myFunc, ttl);
 			
             for (const arg of givenArgs) {
                 memoizedFunc(arg);
@@ -358,7 +358,7 @@ describe('Memoize', () => {
 
         describe('when called on original function', () => {
             beforeEach(() => {
-                Memoize.invalidate(myFunc);
+                Memoization.invalidate(myFunc);
             });
 
             invalidationTests();
@@ -366,7 +366,7 @@ describe('Memoize', () => {
 
         describe('when called on wrapped function', () => {
             beforeEach(() => {
-                Memoize.invalidate(memoizedFunc);
+                Memoization.invalidate(memoizedFunc);
             });
 
             invalidationTests();

@@ -26,19 +26,19 @@ Simple in-memory cache with additional utilities.
 
 ## Basic functions
 
-`Cache` is a low-level interface for storing values to and retrieving values from a global object.
+`cache` is an interface for storing values to and retrieving values from a global object.
 
 ### `set`: caching a value
 
 ```ts
-import { Cache } from 'a-simple-cache';
+import { cache } from 'a-simple-cache';
 ```
 ```ts
 // for one minute
-Cache.set('key', 'value', 60000);
+cache.set('key', 'value', 60000);
 
 // for three minutes
-Cache.set('my:id', { 
+cache.set('my:id', { 
     'number': 42,
     'string': 'Hello!',
 }, 180000);
@@ -47,69 +47,69 @@ Cache.set('my:id', {
 ### `get`: retrieving a value
 
 ```ts
-Cache.get('key');
+cache.get('key');
 'value'
 
-Cache.get('my:id');
+cache.get('my:id');
 { 'number': 42, 'string': 'Hello!' }
 ```
 
 ### `has`: checking if a key exists
 
 ```ts
-Cache.has('key');
+cache.has('key');
 true
 
-Cache.has('non-existent key');
+cache.has('non-existent key');
 false
 ```
 
 ### `isValid`: checking if an entry is valid
 
 ```ts
-Cache.isValid('key');
+cache.isValid('key');
 true
 
 // one minute passes
 
-Cache.isValid('key');
+cache.isValid('key');
 false
 
-Cache.isValid('my:id');
+cache.isValid('my:id');
 true
 
 // another two minutes pass
 
-Cache.isValid('my:id');
+cache.isValid('my:id');
 false
 ```
 
 ### `keys`: listing keys of entries
 
 ```ts
-Cache.keys();
+cache.keys();
 [ 'key', 'my:id' ]
 
 // or use a filter
 
-Cache.keys(k => k.startsWith('my:'));
+cache.keys(k => k.startsWith('my:'));
 [ 'my:id' ]
 ```
 
 ### `delete`: deleting entries
 
 ```ts
-Cache.clear();
+cache.clear();
 
 // or 
 
-for (const key of Cache.keys()) {
-    if (!Cache.isValid(key)) {
-        Cache.delete(key);
+for (const key of cache.keys()) {
+    if (!cache.isValid(key)) {
+        cache.delete(key);
     }
 }
 
-Cache.keys();
+cache.keys();
 [ ]
 ```
 
@@ -141,7 +141,7 @@ It is possible to set a time-to-live for the cached values, after which the orig
 ```ts
 function expensive(arg) { ... }
 
-const memoizedExpensive = Cache.memoize(expensive, time.hour);
+const memoizedExpensive = cache.memoize(expensive, time.hour);
 ```
 ```ts
 // runs function
@@ -163,9 +163,9 @@ Sometimes you need to invalidate a function's cache prematurely so that the func
 // gets value from cache
 memoizedExpensive(0);
 
-Cache.invalidate(memoizedExpensive);
+cache.invalidate(memoizedExpensive);
 // or 
-Cache.invalidate(expensive);
+cache.invalidate(expensive);
 
 // one hour has not passed
 // runs function again
@@ -175,6 +175,11 @@ memoizedExpensive(0);
 ## Tests
 
 ```
-npm test
 npm run coverage
+npm run coverage:open
+```
+
+```
+npm run test:mutations
+npm run test:mutations:open
 ```

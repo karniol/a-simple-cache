@@ -1,5 +1,3 @@
-import { Memoize } from './memoize';
-
 export interface Cache {
     set: typeof set;
     get: typeof get;
@@ -8,8 +6,6 @@ export interface Cache {
     delete: typeof delete_;
     keys: typeof keys;
     clear: typeof clear;
-    memoize: typeof Memoize.it;
-    invalidate: typeof Memoize.invalidate;
 };
 
 export const Cache: Cache = {
@@ -20,11 +16,9 @@ export const Cache: Cache = {
     delete: delete_,
     keys,
     clear,
-    memoize: Memoize.it,
-    invalidate: Memoize.invalidate,
 };
 
-type Key = string;
+export type Key = string;
 
 type KeyFilter = (key: Key) => boolean;
 
@@ -44,8 +38,8 @@ function has(key: Key): boolean {
     return (key in cacheObject);
 }
 
-function set(key: Key, value: any, ttl: number): void {
-    if (ttl <= 0) {
+export function set(key: Key, value: any, ttl: number): void {
+    if (!(ttl as any) || ttl <= 0) {
         throw new RangeError(`TTL must be a positive number, got ${ttl}`);
     }
 
@@ -56,11 +50,11 @@ function set(key: Key, value: any, ttl: number): void {
     cacheObject[key] = { value, cachedAt: new Date(), ttl };
 }
 
-function get(key: Key): any | null {
-    return has(key) ? cacheObject[key].value : null;
+export function get(key: Key): any | undefined {
+    return has(key) ? cacheObject[key].value : undefined;
 }
 
-function isValid(key: Key): boolean {
+export function isValid(key: Key): boolean {
     const entry: Entry = cacheObject[key];
 
     if (entry) {
@@ -72,12 +66,12 @@ function isValid(key: Key): boolean {
     return false;
 }
 
-function delete_(key: Key): boolean {
+export function delete_(key: Key): boolean {
     return has(key) ? delete cacheObject[key as Key] : false;
 }
 
 function clear(): void {
-    Object.keys(cacheObject).forEach((key: string) => delete cacheObject[key]);
+    Object.keys(cacheObject).forEach((key: string) => delete_(key));
 }
 
 function keys(by?: KeyFilter): Key[] {
