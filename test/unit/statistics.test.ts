@@ -4,6 +4,7 @@ import { replaceObject, ReplacedInstance } from 'ts-sinon';
 
 chai.use(sinonChai);
 
+import { cache as api } from '../../src/index';
 import { Cache, cacheObject } from '../../src/cache';
 import { 
     Statistics,
@@ -96,6 +97,40 @@ describe('Statistics', () => {
             }
 
             cacheStub.restore();
+        });
+
+        it('wraps all tracked cache methods directly in the API', () => {
+            const apiStub: ReplacedInstance<typeof api> = replaceObject(api);
+
+            Statistics.enableStatistics();
+
+            for (const methodName of trackedCacheMethodNames) {
+                expect(api[methodName]).to.equal(wrappedCacheMethods[methodName]);
+            }
+
+            apiStub.restore();
+        });
+
+        it('does not wrap any other cache methods directly in the API', () => {
+            const apiStub: ReplacedInstance<typeof api> = replaceObject(api);
+
+            const untrackedCacheMethodNames = Object.keys(api)
+                .filter(k => !trackedCacheMethodNames
+                    .includes(k as typeof trackedCacheMethodNames[number]));
+
+            const originalMethods = {};
+
+            for (const methodName of untrackedCacheMethodNames) {
+                originalMethods[methodName] = api[methodName];
+            }
+
+            Statistics.enableStatistics();
+
+            for (const methodName of untrackedCacheMethodNames) {
+                expect(api[methodName]).to.equal(originalMethods[methodName]);
+            }
+
+            apiStub.restore();
         });
     });
 
