@@ -29,13 +29,13 @@ type StatisticsObject = {
 export const statisticsObject: StatisticsObject = Object.create({});
 
 export interface Statistics {
-    enableStatistics: typeof initialize;
-    statistics: StatisticsObject;
+    enableStatistics: typeof enableStatistics;
+    statistics: typeof statistics;
 };
 
 export const Statistics: Statistics = {
-    enableStatistics: initialize,
-    statistics: statisticsObject,
+    enableStatistics,
+    statistics,
 };
 
 let isEnabled_ = false;
@@ -103,7 +103,7 @@ export const wrappedCacheMethods: WrappedCacheMethods = {
     },
 };
 
-function initialize(): void {
+function enableStatistics(): void {
     if (isEnabled()) {
         throw new Error('statistics are already enabled');
     }
@@ -132,4 +132,8 @@ function initialize(): void {
     }
 
     setEnabled(true);
+}
+
+function statistics(): StatisticsObject {
+    return statisticsObject;
 }

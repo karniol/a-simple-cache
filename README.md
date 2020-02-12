@@ -179,7 +179,7 @@ memoizedExpensive(0);
 // call once after importing
 cache.enableStatistics();
 
-cache.statistics
+cache.statistics();
 ```
 ```json
 {

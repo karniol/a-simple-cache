@@ -245,97 +245,101 @@ describe('Statistics', () => {
         describe('set', () => {
             it('increments `set` when called', () => {
                 expect(statisticsObject.set).to.equal(0);
-                expect(Statistics.statistics.set).to.equal(0);
+                expect(Statistics.statistics().set).to.equal(0);
 
                 Cache.set('key', 'value', 1);
 
                 expect(statisticsObject.set).to.equal(1);
-                expect(Statistics.statistics.set).to.equal(1);
+                expect(Statistics.statistics().set).to.equal(1);
             });
         });
 
         describe('get', () => {
             it('increments `get.hit` when called for existing key', () => {
                 expect(statisticsObject.get.hit).to.equal(0);
-                expect(Statistics.statistics.get.hit).to.equal(0);
+                expect(Statistics.statistics().get.hit).to.equal(0);
 
                 const key = addFakeEntry();
 
                 Cache.get(key);
 
                 expect(statisticsObject.get.hit).to.equal(1);
-                expect(Statistics.statistics.get.hit).to.equal(1);
+                expect(Statistics.statistics().get.hit).to.equal(1);
             });
 
             it('increments `get.miss` when called for non-existent key', () => {
                 expect(statisticsObject.get.miss).to.equal(0);
-                expect(Statistics.statistics.get.miss).to.equal(0);
+                expect(Statistics.statistics().get.miss).to.equal(0);
 
                 Cache.get('non-existent');
 
                 expect(statisticsObject.get.miss).to.equal(1);
-                expect(Statistics.statistics.get.miss).to.equal(1);
+                expect(Statistics.statistics().get.miss).to.equal(1);
             });
         });
 
         describe('isValid', () => {
             it('increments `isValid.true` when called for valid key', () => {
                 expect(statisticsObject.isValid.true).to.equal(0);
-                expect(Statistics.statistics.isValid.true).to.equal(0);
+                expect(Statistics.statistics().isValid.true).to.equal(0);
 
                 const key = addFakeValidEntry();
 
                 Cache.isValid(key);
 
                 expect(statisticsObject.isValid.true).to.equal(1);
-                expect(Statistics.statistics.isValid.true).to.equal(1);
+                expect(Statistics.statistics().isValid.true).to.equal(1);
             });
 
             it('increments `isValid.false` when called for invalid key', () => {
                 expect(statisticsObject.isValid.false).to.equal(0);
-                expect(Statistics.statistics.isValid.false).to.equal(0);
+                expect(Statistics.statistics().isValid.false).to.equal(0);
 
                 const key = addFakeInvalidEntry();
 
                 Cache.isValid(key);
 
                 expect(statisticsObject.isValid.false).to.equal(1);
-                expect(Statistics.statistics.isValid.false).to.equal(1);
+                expect(Statistics.statistics().isValid.false).to.equal(1);
             });
         });
 
         describe('delete', () => {
             it('increments `delete` when called on existing key', () => {
                 expect(statisticsObject.delete).to.equal(0);
-                expect(Statistics.statistics.delete).to.equal(0);
+                expect(Statistics.statistics().delete).to.equal(0);
 
                 const key = addFakeEntry();
 
                 Cache.delete(key);
 
                 expect(statisticsObject.delete).to.equal(1);
-                expect(Statistics.statistics.delete).to.equal(1);
+                expect(Statistics.statistics().delete).to.equal(1);
             });
 
             it('does not increment `delete` when called on non-existent key', () => {
                 expect(statisticsObject.delete).to.equal(0);
-                expect(Statistics.statistics.delete).to.equal(0);
+                expect(Statistics.statistics().delete).to.equal(0);
                 
                 Cache.delete('non-existent');
 
                 expect(statisticsObject.delete).to.equal(0);
-                expect(Statistics.statistics.delete).to.equal(0);
+                expect(Statistics.statistics().delete).to.equal(0);
             });
         });
     });
 
-    describe('statistics property', () => {
+    describe('statistics', () => {
         it('exists', () => {
             expect(Statistics.statistics).to.not.be.undefined;
         });
 
-        it('is equal to statisticsObject', () => {
-            expect(Statistics.statistics).to.equal(statisticsObject);
+        it('is a function', () => {
+            expect(typeof Statistics.statistics).to.equal('function');
+        });
+
+        it('returns statisticsObject', () => {
+            expect(Statistics.statistics()).to.equal(statisticsObject);
         });
     });
 });
