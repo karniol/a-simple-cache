@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import { HashCode } from '../../src/hash';
+import { HashCode } from '../../src/hashcode';
 
-describe('Hash', () => {
+describe('HashCode', () => {
     const cases = {
         '0': 0,
         'null': null,
@@ -130,9 +130,7 @@ describe('Hash', () => {
 
             it('returns same hashes for anonymous functions having same body but different source', () => {
                 expect(
-                    HashCode.ofFunction(function(k: string) {
-                        k.toUpperCase();
-                    })
+                    HashCode.ofFunction(function(k: string) { k.toUpperCase(); })
                 ).to.equal(
                     HashCode.ofFunction(function(k: string) {
                         k.toUpperCase();
@@ -177,9 +175,7 @@ describe('Hash', () => {
 
             it('returns same hashes for anonymous functions having same body but different source', () => {
                 expect(
-                    HashCode.ofFunction((k: string) => {
-                        k.toUpperCase();
-                    })
+                    HashCode.ofFunction((k: string) => { k.toUpperCase(); })
                 ).to.equal(
                     HashCode.ofFunction((k: string) => {
                         k.toUpperCase();

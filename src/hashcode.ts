@@ -4,7 +4,7 @@ export interface HashCode {
     ofFunction: typeof ofFunction;
 }
 
-export const HashCode = {
+export const HashCode: HashCode = {
     of,
     ofString,
     ofFunction,
