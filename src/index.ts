@@ -3,9 +3,9 @@ import { Memoization } from './memoization';
 import { Statistics } from './statistics';
 import { time } from './time';
 
-interface ASimpleCache extends Cache, Memoization, Statistics {};
+interface API extends Cache, Memoization, Statistics {};
 
-const cache: ASimpleCache = {
+const api: API = {
     set: Cache.set,
     get: Cache.get,
     has: Cache.has,
@@ -20,6 +20,6 @@ const cache: ASimpleCache = {
 };
 
 export {
-    cache,
+    api as cache,
     time
 };

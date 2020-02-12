@@ -1,3 +1,4 @@
+import { cache } from './index';
 import { Cache } from './cache';
 import { set, get, isValid, delete_ } from './cache';
 
@@ -127,6 +128,7 @@ function initialize(): void {
 
     for (const methodName of Object.keys(wrappedCacheMethods)) {
         Cache[methodName] = wrappedCacheMethods[methodName];
+        cache[methodName] = Cache[methodName];
     }
 
     setEnabled(true);
