@@ -124,7 +124,8 @@
         "ignorePatterns": [
             "**/*.js",
             "node_modules/",
-            "**/*.conf.js"
+            "**/*.conf.js",
+            "dist"
         ],
         "extends": [
             "plugin:@typescript-eslint/recommended"
