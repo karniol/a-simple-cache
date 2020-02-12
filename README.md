@@ -31,13 +31,14 @@ Simple in-memory cache with additional utilities, including memoization and stat
 
 ### `set`: caching a value
 
-```ts
+```js
 import { cache } from 'a-simple-cache';
 ```
-```ts
+```js
 // for one minute
 cache.set('key', 'value', 60000);
-
+```
+```js
 // for three minutes
 cache.set('my:id', { 
     'number': 42,
@@ -47,69 +48,72 @@ cache.set('my:id', {
 
 ### `get`: retrieving a value
 
-```ts
+```js
 cache.get('key');
 'value'
-
+```
+```js
 cache.get('my:id');
-{ 'number': 42, 'string': 'Hello!' }
+{ number: 42, string: 'Hello!' }
 ```
 
 ### `has`: checking if a key exists
 
-```ts
+```js
 cache.has('key');
 true
-
+```
+```js
 cache.has('non-existent key');
 false
 ```
 
 ### `isValid`: checking if an entry is valid
 
-```ts
+```js
 cache.isValid('key');
 true
-
+```
+```js
 // one minute passes
-
 cache.isValid('key');
 false
 
 cache.isValid('my:id');
 true
-
+```
+```js
 // another two minutes pass
-
 cache.isValid('my:id');
 false
 ```
 
 ### `keys`: listing keys of entries
 
-```ts
+```js
 cache.keys();
 [ 'key', 'my:id' ]
-
+```
+```js
 // or use a filter
-
 cache.keys(k => k.startsWith('my:'));
 [ 'my:id' ]
 ```
 
 ### `delete`: deleting entries
 
-```ts
+```js
 cache.clear();
-
-// or 
-
+```
+```js
+// or delete one-by-one
 for (const key of cache.keys()) {
     if (!cache.isValid(key)) {
         cache.delete(key);
     }
 }
-
+```
+```js
 cache.keys();
 [ ]
 ```
@@ -118,10 +122,10 @@ cache.keys();
 
 Caching time is expressed as a number of milliseconds, but the library provides a few constants for convenience.
 
-```ts
+```js
 import { time } from 'a-simple-cache';
 ```
-```ts
+```js
 time.second, time.minute, time.hour
 1000, 60000, 3600000
 
@@ -139,18 +143,20 @@ On subsequent calls to the memoized function, cached values will be retrieved in
 
 It is possible to set a time-to-live for the cached values, after which the original function will run again and new values will be stored in the cache.
 
-```ts
+```js
 function expensive(arg) { ... }
 
 const memoizedExpensive = cache.memoize(expensive, time.hour);
 ```
-```ts
+```js
 // runs function
 memoizedExpensive(0);
-
+```
+```js
 // gets value from cache
 memoizedExpensive(0);
-
+```
+```js
 // one hour passes
 // runs function again
 memoizedExpensive(0); 
@@ -160,14 +166,16 @@ memoizedExpensive(0);
 
 Sometimes you need to invalidate a function's cache prematurely so that the function will start to run again for all argument combinations.
 
-```ts
+```js
 // gets value from cache
 memoizedExpensive(0);
-
+```
+```js
 cache.invalidate(memoizedExpensive);
 // or 
 cache.invalidate(expensive);
-
+```
+```js
 // one hour has not passed
 // runs function again
 memoizedExpensive(0);
@@ -175,24 +183,19 @@ memoizedExpensive(0);
 
 #### `statistics`: get an overview of called cache methods
 
-```ts
+```js
 // call once after importing
 cache.enableStatistics();
-
+```
+```js
 cache.statistics();
 ```
-```json
+```js
 {
     set: 0,
     delete: 0,
-    get: {
-        hit: 0,
-        miss: 0,
-    },
-    isValid: {
-        true: 0,
-        false: 0,
-    }
+    get: { hit: 0, miss: 0 },
+    isValid: { true: 0, false: 0 }
 }
 ```
 
