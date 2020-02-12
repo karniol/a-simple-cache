@@ -5,7 +5,7 @@
 
 <hr>
 
-Simple in-memory cache with additional utilities.
+Simple in-memory cache with additional utilities, including memoization and statistics.
 
 <hr>
 
@@ -20,6 +20,7 @@ Simple in-memory cache with additional utilities.
 - [Extended functions](#extended-functions)
     - [`memoize`: memoizing a function](#memoize-memoizing-a-function)
     - [`invalidate`: invalidating a function's cache](#invalidate-invalidating-a-functions-cache)
+    - [`statistics`: get an overview of called cache methods](#statistics-get-an-overview-of-called-cache-methods)
 - [Tests](#tests)
 
 <hr>
@@ -170,6 +171,29 @@ cache.invalidate(expensive);
 // one hour has not passed
 // runs function again
 memoizedExpensive(0);
+```
+
+#### `statistics`: get an overview of called cache methods
+
+```ts
+// call once after importing
+cache.enableStatistics();
+
+cache.statistics
+```
+```json
+{
+    set: 0,
+    get: {
+        hit: 0,
+        miss: 0,
+    },
+    isValid: {
+        true: 0,
+        false: 0,
+    },
+    delete: 0
+}
 ```
 
 ## Tests

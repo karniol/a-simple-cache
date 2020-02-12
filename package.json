@@ -1,6 +1,6 @@
 {
     "name": "a-simple-cache",
-    "description": "Simple in-memory cache with additional utilities",
+    "description": "Simple in-memory cache with additional utilities, including memoization and statistics",
     "version": "1.0.8",
     "scripts": {
         "build": "tsc",
