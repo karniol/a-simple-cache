@@ -26,7 +26,7 @@ type StatisticsObject = {
     [K in SimplyTrackedMethodName]: number;
 };
 
-export const statisticsObject: StatisticsObject = Object.create(null);
+export const statisticsObject: StatisticsObject = Object.create({});
 
 export interface Statistics {
     enableStatistics: typeof initialize;
