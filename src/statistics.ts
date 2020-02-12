@@ -103,9 +103,9 @@ export const wrappedCacheMethods: WrappedCacheMethods = {
     },
 };
 
-function enableStatistics(): void {
+function enableStatistics(): boolean {
     if (isEnabled()) {
-        throw new Error('statistics are already enabled');
+        throw new Error('statistics is already enabled');
     }
 
     for (const methodName of simplyTrackedCacheMethodNames) {
@@ -132,6 +132,8 @@ function enableStatistics(): void {
     }
 
     setEnabled(true);
+
+    return true;
 }
 
 function statistics(): StatisticsObject {

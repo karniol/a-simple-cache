@@ -52,7 +52,7 @@ describe('Statistics', () => {
         it('sets isEnabled to true', () => {
             expect(isEnabled()).to.equal(false);
 
-            Statistics.enableStatistics();
+            expect(Statistics.enableStatistics()).to.equal(true);
 
             expect(isEnabled()).to.equal(true);
         });
@@ -60,9 +60,9 @@ describe('Statistics', () => {
         it('cannot be called more than once', () => {
             Statistics.enableStatistics();
 
-            const secondCall = (): void => Statistics.enableStatistics();
+            const secondCall = (): boolean => Statistics.enableStatistics();
 
-            expect(secondCall).to.throw('statistics are already enabled');
+            expect(secondCall).to.throw('statistics is already enabled');
         });
 
         it('wraps all tracked cache methods', () => {
